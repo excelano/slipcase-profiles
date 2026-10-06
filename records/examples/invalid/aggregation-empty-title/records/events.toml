@@ -1,7 +1,7 @@
 [[event]]
 seq = 1
-at = 2026-03-12T09:00:00Z
-prev = "d1858df52e325b9dc9adcc0eb73a053d0a2ff7505ba64dbff0ff0f810e746a6d"
-type = "placed"
+at = 2024-01-10T08:00:00Z
+prev = "e4752021b812d39ea9b05f168e644b399b3ab88c3932035fbbed84ecaa0789f4"
+type = "created"
 actor = { email = "rm@example.com", id = "5e4d3c2b-1a09-4f8e-9d7c-6b5a4f3e2d1c" }
 tool = "fileroom-pro 0.1.0"

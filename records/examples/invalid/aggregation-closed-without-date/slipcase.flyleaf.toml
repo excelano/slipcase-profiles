@@ -1,0 +1,19 @@
+slipcase_version = "1.1"
+
+[content]
+file = "cover.txt"
+
+[records]
+profile = "https://slipcaseformat.org/profiles/records"
+profile_version = "1.0"
+kind = "aggregation"
+id = "01927a55-2b1c-7e4d-9f6a-3c4d5e6f7a8b"
+title = "Vendor contract C-4471"
+status = "closed"
+default_series = "LEG-010"
+events_head = "8fdc9b21541c8dd7034b0a4b2a08a908dbd18a36c5e1c5d5e44e43903552e850"
+
+[[records.relations]]
+type = "member-of"
+target = "01927a00-1111-7222-8333-444455556666"
+title = "Vendor contracts 2024"

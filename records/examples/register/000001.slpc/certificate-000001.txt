@@ -1,0 +1,13 @@
+Certificate of disposal, batch 000001
+Example Corporation
+
+Plan 01929e10-2a3b-7c4d-8e5f-6a7b8c9d0e1f, evaluated 2026-10-01 against schedule 20261005T140211Z-3fa9c2e1b7d0.
+Approved by rm@example.com, as stated to the implementation and not verified by it.
+Started 2026-10-05T13:58:40Z, completed 2026-10-05T14:02:11Z, on fs-ops-02 as svc-fileroom, by fileroom 0.1.0.
+Removed from repository. Backup copies expire under the backup retention policy.
+Planned 2, destroyed 1.
+
+01927c3e-8b2a-7d41-9f3c-2a6e5b1c4d7f  invoice-2024-0117.pdf  legal:contracts/C-4471/invoice-2024-0117.pdf.slpc  FIN-200  jdoe@example.com  2024-01-17  destroyed
+01927c40-0000-7000-8000-000000000002  expense-2024-03.pdf  legal:finance/2024/expense-2024-03.pdf.slpc  FIN-210  asmith@example.com  2024-03-02  skipped: changed_since_plan
+
+This is a text certificate.

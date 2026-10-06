@@ -1,0 +1,2 @@
+id,title,path,series,custodian_email,created,content_sha256,flyleaf_sha256,outcome,reason
+01927c3e-8b2a-7d41-9f3c-2a6e5b1c4d7f,invoice-2024-0117.pdf,legal:contracts/C-4471/invoice-2024-0117.pdf.slpc,FIN-200,jdoe@example.com,2024-01-17,51ab0e6a6f3f1b0a9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b,0f0e0d0c0b0a09080706050403020100ffeeddccbbaa99887766554433221100,,

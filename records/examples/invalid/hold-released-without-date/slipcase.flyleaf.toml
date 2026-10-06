@@ -9,10 +9,10 @@ profile_version = "1.0"
 kind = "hold"
 id = "01927d01-4c2e-7a3b-8d5f-1e2a3b4c5d6e"
 title = "Vendor dispute, Acme Corp."
-type = "regulatory"
+type = "legal"
 mandate = "Litigation hold, counsel's instruction of 2026-03-11"
 placed = 2026-03-12
-status = "active"
+status = "released"
 scope = "custodian.email in ['jdoe@example.com'] and created >= 2023-01-01"
 events_head = "cfc8d7801b9b22d820ff407709c9f4db6ec358083bb4faddd99d2ba8c8e699de"
 

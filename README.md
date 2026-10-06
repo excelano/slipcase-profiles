@@ -10,7 +10,7 @@ Each official profile lives in its own directory, with its specification, its de
 
 | Profile | Table | Status |
 |---|---|---|
-| Slipcase Records Profile (`records/`) | `[records]` | draft: records (§2) written; schedules, holds, aggregations, register, records root to come |
+| Slipcase Records Profile (`records/`) | `[records]` | draft, complete: records, schedules, holds, aggregations, register, records root, eligibility |
 
 A profile specified somewhere else is a profile all the same: the framework identifies a profile by its URI, under any origin.
 

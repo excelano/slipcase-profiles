@@ -114,3 +114,55 @@ Format identification beyond a media type (PRONOM); the key is reserved so that 
 **Flags are not decisions (SPEC §8.3).** A record past its maximum while on hold, or whose series conflict, is a record a person has to look at. The profile reports and stops. Resolving a maximum-before-minimum conflict automatically would mean choosing which law to break.
 
 **Review is a disposal action and an outcome (SPEC §8.4).** MoReq2010's review is the case where the schedule says "a person decides", and the profile makes that a first-class outcome rather than treating it as not-eligible-with-a-note, so that a records manager's queue of decisions is a query and not a search.
+
+## 13. Holds and aggregations as containers
+
+**Defined centrally, applied to records (SPEC §4, §5).** A hold matter and an aggregation are each one thing with one history, and the records they touch are many. The definition lives in one container in the records root; each record carries only a pointer (a `holds` entry, a `member-of` relation). Releasing a matter is then one change to the definition plus one small change per record, each logged where it belongs, and the question "who released this and when" has one answer in one place.
+
+**As containers rather than TOML files**, so that the hold notice or the case file's cover sheet travels with the definition, and so that the definition has the same chained log every record has, with the same tools reading it. An empty content file is permitted for the common case of a definition with no document, which Slipcase allows.
+
+**Scope as a SlipQL expression.** A hold has to say which records it covers in a form a program can apply to a hundred thousand containers and a person can read. SlipQL already exists for querying flyleafs and is the open layer's own query language, so the alternative would have been a second expression language for one key. The match count shown before applying is what makes an expression safe to write: a scope that matches nothing, or everything, is seen before it does anything.
+
+**Matching at classification and at destruction, not only at placing.** A hold placed on Monday has to cover the record captured on Tuesday. And a record's `holds` list is maintained by the implementation that applies holds, which can have a gap; the defensive check at destruction (SPEC §4.3) is what makes the gap a reported condition rather than a destroyed record.
+
+**Membership by relation in the record, found by query.** An aggregation that listed its members would have to be rewritten every time a record joined or left, and would be wrong the moment a record was copied elsewhere. The record saying what it belongs to is the same inversion as everything else here: the file is the truth.
+
+**Inheritance is a copy at joining.** A member that looked up its series through its aggregation at evaluation time would have retention that changed when the aggregation's did, invisibly to the record's own log. Copying the series into the record, logged as `classified`, keeps every record's retention in the record.
+
+**Closing triggers `Final action` only.** Closing a case file is what "final action" means in NARA's vocabulary, and a series triggered by some other event (a person leaving, a document being superseded) is not triggered by the case closing. Mapping closure to every event would have destroyed records early.
+
+## 14. The register
+
+**Intent, journal, final (SPEC §6).** Destruction is the one irreversible operation, and a crash in the middle of it is the one case the design has to survive. Three files, each written once or only appended, mean that at every instant the register says what has actually happened: the intent says what was going to be attempted, the journal says what has been attempted so far, and the final says what was done. A single file rewritten at the end would have said nothing during the run and would have had to be rewritten, which the chain forbids.
+
+**The intent is the lock.** Creating `N.intent.slpc` with create-new semantics is atomic on every filesystem the profile targets, including SMB, so it is the one operation two runs cannot both win. Making the lock a file in the register, rather than a lock file beside it, means the register itself records that a claim was made, and an intent that never finalizes is an auditable fact rather than a stale lock.
+
+**One batch at a time.** The chain needs batch N−1's final to write batch N's, so two concurrent runs could not both finalize. Serializing runs at the claim is simpler than any scheme for chaining in finalization order, and it also means two plans naming the same record cannot execute at once.
+
+**Recovery is explicit and never automatic.** The first design had any run finalize an unfinished intent it found. Across machines, nothing in the register distinguishes a crashed run from one still deleting on another host, and a run that "recovered" a live batch would have written a final whose manifest was a lie while records went on being destroyed. A person who knows the run is dead confirms that; the profile cannot.
+
+**`unknown` is an outcome.** When recovery finds a record gone and no journal entry for it, the record may have been destroyed by the run in the instant before it died, or by something else. Writing `destroyed` would be a claim; `unknown` is the truth.
+
+**The final is also exclusive-created**, so that recovery racing a run that was alive after all, or two recoveries, produce one final and one failure rather than two finals.
+
+**The chain is over stored bytes of members, not over containers**, for the reason CONVENTIONS §3 gives: repacking changes bytes. Every register container is written once and never repacked, and the rule that nothing reserializes a register flyleaf is what keeps that true.
+
+**The journal is hashed whole rather than by head.** It is complete when the final is written, so a whole-file hash covers it entirely, and verification of a final then needs no knowledge of the journal's structure. CONVENTIONS §5.5 was widened to allow this once the register showed the case.
+
+**The genesis value is a fixed string's hash**, published in the specification, rather than something per organization. A per-organization value would be one more thing to keep and to lose, and the first batch's `previous_flyleaf_sha256` has nothing to say except "there is no previous batch".
+
+**Six digits.** A register that reaches a million batches has run one batch a day for 2,700 years. The width is fixed so that names sort.
+
+**Approval is recorded, not verified.** This profile defines no users and no authority. The implementation writes what it was told and the certificate says that it was told, so that nobody reads a certificate as proof of an approval the profile never checked.
+
+**No secure erasure.** Overwriting is unreliable on SSDs, copy-on-write filesystems, SMB shares with snapshots, and synced folders, and claiming it would be a false assurance. The scope statement says what happened and names backups; crypto-shredding is the one technique that would make destruction verifiable in backups too, and it is a possible later feature, not something this profile pretends to.
+
+## 15. Implementation requirements and security
+
+**The never-destroy list is in the implementation section (SPEC §9)**, restating §8.5 from the other side, because the one place a reader of an implementation looks for "what will this refuse" should hold the answer without a derivation.
+
+**A sweep report in the records root, exceptions in the record (SPEC §9).** NARA requires a documented integrity check; a report per sweep is that document. The record's own log gets only what the sweep found wrong, for the reason §7 of this document gives.
+
+**Paths in logs are never opened (SPEC §10).** A log is data that anyone who can write a container can write. Treating a path from it as a place to delete would make the register a weapon.
+
+**What the profile protects and what it detects.** Anyone with write access can delete records and can delete the register. The profile makes both detectable, by fixity and by the chain, and does not pretend to prevent either; prevention is the file share's job and the organization's.

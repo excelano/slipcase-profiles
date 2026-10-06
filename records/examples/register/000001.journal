@@ -1,0 +1,14 @@
+[[outcome]]
+seq = 1
+at = 2026-10-05T13:59:01Z
+prev = "a8e8adb6763954358cef6de2d810d29ab4792e0c0c5de00ea86b1dc27bf232d8"
+record = "01927c3e-8b2a-7d41-9f3c-2a6e5b1c4d7f"
+outcome = "destroyed"
+
+[[outcome]]
+seq = 2
+at = 2026-10-05T13:59:02Z
+prev = "7f728eb7cd8e76c68d095b1fe128220f446ba460e3782280b50a1a3668ee8910"
+record = "01927c40-0000-7000-8000-000000000002"
+outcome = "skipped"
+reason = "changed_since_plan"

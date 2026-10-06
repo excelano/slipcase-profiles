@@ -188,3 +188,63 @@ name = "profile-uri-wrong"
 verdict = "non-conformant"
 rule = "FRAMEWORK 3"
 note = "The table is named records but its profile names another specification."
+
+[[case]]
+name = "hold-active"
+verdict = "conformant"
+rule = "4.1"
+note = "An active legal hold matter with its notice and a one-entry log."
+
+[[case]]
+name = "hold-released"
+verdict = "conformant"
+rule = "4.3"
+note = "A released matter: status, released date, and the release in the log."
+
+[[case]]
+name = "hold-released-without-date"
+verdict = "non-conformant"
+rule = "4.1"
+note = "status released with no released date."
+
+[[case]]
+name = "hold-unknown-type"
+verdict = "non-conformant"
+rule = "4.1"
+note = "type outside legal and extension."
+
+[[case]]
+name = "hold-first-not-placed"
+verdict = "non-conformant"
+rule = "4.2"
+note = "The first entry is not placed."
+
+[[case]]
+name = "aggregation-open"
+verdict = "conformant"
+rule = "5.1"
+note = "An open aggregation with a default series, nested in a parent."
+
+[[case]]
+name = "aggregation-closed"
+verdict = "conformant"
+rule = "5.3"
+note = "A closed aggregation."
+
+[[case]]
+name = "aggregation-closed-without-date"
+verdict = "non-conformant"
+rule = "5.1"
+note = "status closed with no closed date."
+
+[[case]]
+name = "aggregation-empty-title"
+verdict = "non-conformant"
+rule = "5.1"
+note = "An empty title."
+
+[[case]]
+name = "register"
+verdict = "conformant"
+rule = "6.6"
+note = "See examples/register/README.md: one final batch chained to the genesis value, one unfinished intent."

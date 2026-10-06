@@ -1,0 +1,15 @@
+[[event]]
+seq = 1
+at = 2024-01-10T08:00:00Z
+prev = "e4752021b812d39ea9b05f168e644b399b3ab88c3932035fbbed84ecaa0789f4"
+type = "created"
+actor = { email = "rm@example.com", id = "5e4d3c2b-1a09-4f8e-9d7c-6b5a4f3e2d1c" }
+tool = "fileroom-pro 0.1.0"
+
+[[event]]
+seq = 2
+at = 2026-06-30T17:00:00Z
+prev = "a1af45b791c1f9f3b0f8df269c43048c352c839c75941889923a0813d8800c2a"
+type = "closed"
+actor = { email = "rm@example.com", id = "5e4d3c2b-1a09-4f8e-9d7c-6b5a4f3e2d1c" }
+tool = "fileroom-pro 0.1.0"

@@ -1,0 +1,32 @@
+slipcase_version = "1.1"
+
+[content]
+file = "certificate-000001.txt"
+
+[records]
+profile = "https://slipcaseformat.org/profiles/records"
+profile_version = "1.0"
+kind = "disposal-batch"
+
+[records.disposition]
+sequence = 1
+state = "final"
+started = 2026-10-05T13:58:40Z
+completed = 2026-10-05T14:02:11Z
+host = "fs-ops-02"
+user = "svc-fileroom"
+records_planned = 2
+records_destroyed = 1
+plan_id = "01929e10-2a3b-7c4d-8e5f-6a7b8c9d0e1f"
+evaluated = 2026-10-01
+schedule_version = "20261005T140211Z-3fa9c2e1b7d0"
+component = "fileroom 0.1.0"
+approved_by = ["rm@example.com"]
+scope_statement = "Removed from repository. Backup copies expire under the backup retention policy."
+
+[records.chain]
+intent_flyleaf_sha256 = "381d0ec7f19f12ed30b9aca00141704c1934f63a88c13d53775f7704f46a2902"
+previous_flyleaf_sha256 = "872a5013347fc0dcd51e6fe0af140a92b1881674b002fb2f069b2cbaaa16e88a"
+content_sha256 = "688d4dfbd3e48fb83c0f60adeaea4d70d8365f30f5259193fafafd4eb2b65c73"
+manifest_sha256 = "a9394c51ea1987869e69ecd4cd539edf41552a37bca270f96bc19a498d5bc874"
+journal_sha256 = "ed2f5195fb5ab692ad486796366320b21844a7b239f0a49d5d386e259a12ce1b"

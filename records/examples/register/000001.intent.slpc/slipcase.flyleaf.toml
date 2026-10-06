@@ -1,0 +1,25 @@
+slipcase_version = "1.1"
+
+[content]
+file = "intent-000001.txt"
+
+[records]
+profile = "https://slipcaseformat.org/profiles/records"
+profile_version = "1.0"
+kind = "disposal-batch"
+
+[records.disposition]
+sequence = 1
+state = "intent"
+started = 2026-10-05T13:58:40Z
+host = "fs-ops-02"
+user = "svc-fileroom"
+records_planned = 2
+plan_id = "01929e10-2a3b-7c4d-8e5f-6a7b8c9d0e1f"
+evaluated = 2026-10-01
+schedule_version = "20261005T140211Z-3fa9c2e1b7d0"
+approved_by = ["rm@example.com"]
+scope_statement = "Removed from repository. Backup copies expire under the backup retention policy."
+
+[records.chain]
+manifest_sha256 = "505c09aa81d162ebe8b7a416070653acaa13b6229516584c7455ba82d81f1edc"

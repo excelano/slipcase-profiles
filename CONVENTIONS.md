@@ -125,7 +125,7 @@ A profile may place the append inside a larger operation (a repack of the contai
 
 ### 5.5 The head
 
-The chain covers every entry but the last: nothing hashes the last entry, so an edit to it, or the removal of any number of entries from the end, leaves a log that verifies. A log's **head** is the hash of its last entry's bytes. A profile that needs the last entry and the length of the log to be protected MUST record the head outside the log, in a place that is itself covered by a hash or written under the profile's own rules (a key in the profile table that is written in the same operation as the append, for example), and MUST state where. Verification then checks that the hash of the last entry equals the recorded head.
+The chain covers every entry but the last: nothing hashes the last entry, so an edit to it, or the removal of any number of entries from the end, leaves a log that verifies. A log's **head** is the hash of its last entry's bytes. A profile that needs the last entry and the length of the log to be protected MUST record outside the log either the head or a hash of the whole file, in a place that is itself covered by a hash or written under the profile's own rules (a key in the profile table that is written in the same operation as the append, for example), and MUST state which and where. Verification then checks the recorded value against the log. The head suits a log that is still being appended to; a hash of the whole file suits one that is complete.
 
 A profile that records no head is stating that the last entry and the log's length are unprotected. That is a legitimate choice for a log whose entries are corroborated elsewhere.
 

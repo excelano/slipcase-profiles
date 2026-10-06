@@ -2,7 +2,7 @@
 # Verify a chained log against CONVENTIONS §5: delimit entries by header line,
 # hash their stored bytes, and check seq and prev.
 #
-# Usage: verify-log.py <log-file> <entry-name> <seed-string>
+# Usage: verify-log.py <log-file> <entry-name> <seed-string> [expected-head]
 #
 # Author: David M. Anderson
 # Built with AI assistance (Claude, Anthropic)
@@ -33,6 +33,7 @@ def entries_of(data: bytes, name: str) -> list[bytes]:
 
 def main() -> None:
     path, name, seed = sys.argv[1:4]
+    head = sys.argv[4] if len(sys.argv) > 4 else None
     data = open(path, "rb").read()
     chunks = entries_of(data, name)
     parsed = tomllib.loads(data.decode("utf-8"))[name]
@@ -46,7 +47,9 @@ def main() -> None:
         if entry.get("prev") != expected:
             raise SystemExit(f"broken at entry {n}: prev does not hash the previous entry")
         expected = hashlib.sha256(raw).hexdigest()
-    print(f"intact: {len(chunks)} entries")
+    if head is not None and expected != head:
+        raise SystemExit("the last entry does not hash to the recorded head (CONVENTIONS 5.5)")
+    print(f"intact: {len(chunks)} entries, head {expected}")
 
 
 if __name__ == "__main__":

@@ -75,7 +75,9 @@ This is the convention with the most rules, because it makes a claim the others 
 
 **Refuse rather than repair.** A file that does not end with LF, or that has no header line, is either not a log or has been damaged. Fixing it means writing bytes into a region an earlier hash may cover. The writer stops and reports; a person decides.
 
-**`seq` as well as `prev`.** The hash chain alone detects a changed or reordered entry, but not a truncated log: cut the file after entry 3 and entries 1 to 3 still verify. `seq` does not fix that either (the profile fixes it, by recording elsewhere what the last `seq` should be), but it does make a gap or a reorder reportable by number rather than only as "the hash is wrong somewhere", and it gives entries an order independent of `at`, which a wrong clock can scramble.
+**The head (CONVENTIONS §5.5).** A chain of `prev` links covers every entry but the last, so the two edits it cannot see are an edit to the last entry and a truncation. The first test written against the verifier found the first of these: change `hold_applied` to `hold_released` in a two-entry log and the log is intact. Both are closed by recording the hash of the last entry somewhere the log cannot reach. The convention requires a profile to say where, rather than fixing a place, because the right place differs: the Records Profile has a flyleaf that changes in the same repack as every append, which is the natural home; a log that is a file beside containers has to find one.
+
+**`seq` as well as `prev`.** With the head recorded, `prev` and the head together detect every edit. `seq` adds nothing to detection; it makes a gap or a reorder reportable by number rather than only as "the hash is wrong somewhere", and it gives entries an order independent of `at`, which a wrong clock can scramble.
 
 ## 9. Non-goals
 

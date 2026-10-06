@@ -123,6 +123,12 @@ A writer appends an entry by writing its bytes after the last byte of the file. 
 
 A profile may place the append inside a larger operation (a repack of the container that also changes the flyleaf) and require the two to succeed or fail together. The convention does not.
 
-### 5.5 What breaks a log, and what is meant to
+### 5.5 The head
+
+The chain covers every entry but the last: nothing hashes the last entry, so an edit to it, or the removal of any number of entries from the end, leaves a log that verifies. A log's **head** is the hash of its last entry's bytes. A profile that needs the last entry and the length of the log to be protected MUST record the head outside the log, in a place that is itself covered by a hash or written under the profile's own rules (a key in the profile table that is written in the same operation as the append, for example), and MUST state where. Verification then checks that the hash of the last entry equals the recorded head.
+
+A profile that records no head is stating that the last entry and the log's length are unprotected. That is a legitimate choice for a log whose entries are corroborated elsewhere.
+
+### 5.6 What breaks a log, and what is meant to
 
 Any tool that rewrites the file's bytes while preserving its TOML meaning breaks the chain: a TOML formatter, a text editor that converts line endings, a version control system normalizing LF to CRLF. The chain is meant to break in every such case, because the log's claim is that the bytes are the bytes that were written. A profile that stores a chained log in a place where such tools run should say so, and an implementation that sees a broken log reports it and never repairs it.

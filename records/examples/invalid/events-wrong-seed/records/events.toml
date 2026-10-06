@@ -1,0 +1,8 @@
+[[event]]
+seq = 1
+at = 2024-02-03T15:04:11Z
+prev = "f23288a1af731a410a1abd5fe3323b1e5cf2b4bfd2c3ef77913a9f221081f307"
+type = "captured"
+actor = { email = "jdoe@example.com", id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b" }
+tool = "fileroom-pro 0.1.0"
+location = { root = "legal", path = "contracts/C-4471/invoice-2024-0117.pdf.slpc", raw = '\\files\legal\contracts\C-4471\invoice-2024-0117.pdf.slpc' }

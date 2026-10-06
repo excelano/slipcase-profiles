@@ -1,0 +1,50 @@
+slipcase_version = "1.1"
+
+[content]
+file = "invoice-2024-0117.pdf"
+
+[records]
+profile = "https://slipcaseformat.org/profiles/records"
+profile_version = "1.0"
+kind = "record"
+id = "01927c3e-8b2a-7d41-9f3c-2a6e5b1c4d7f"
+created = 2024-01-17
+captured = 2024-02-03T15:04:11Z
+mime_type = "application/pdf"
+size = 53
+essential = false
+events_head = "e6cee8edd97ecd62e1a8dd34416796fd0838b5e0f9d2da3612839154732eba7d"
+
+[records.creator]
+email = "jdoe@example.com"
+id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
+
+[records.custodian]
+email = "jdoe@example.com"
+id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
+
+[records.fixity]
+content_sha256 = "1636f03d3b129195cadf3bfbe7403e6f58eb0f2ec47556bde4aed504f7c67332"
+
+[[records.series]]
+code = "FIN-200"
+trigger = 2024-01-17
+marking = "Confidential"
+
+[records.series.snapshot]
+title = "Accounts Payable"
+retention = "6"
+retention_type = "Event_age"
+event_type = "Final action"
+disposition = "Temporary"
+schedule_version = "20261005T140211Z-3fa9c2e1b7d0"
+
+[[records.holds]]
+matter = "01927d01-4c2e-7a3b-8d5f-1e2a3b4c5d6e"
+type = "legal"
+applied = 2026-03-12
+
+[[records.relations]]
+type = "member-of"
+target = "01927a55-2b1c-7e4d-9f6a-3c4d5e6f7a8b"
+title = "Vendor contract C-4471"

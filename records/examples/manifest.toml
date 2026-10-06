@@ -1,0 +1,190 @@
+# Every example under valid/ and invalid/, with the verdict an implementation of
+# Records Profile 1.0 reaches and the section whose rule decides it. Each case
+# is a directory in container form: pack it with the flyleaf and every member.
+# Not normative: where a case and SPEC.md disagree, the specification wins.
+
+[[case]]
+name = "minimal"
+verdict = "conformant"
+rule = "2.2"
+note = "Every required key, one series, no optional keys."
+
+[[case]]
+name = "full"
+verdict = "conformant"
+rule = "2.1"
+note = "The example in the specification: snapshot, a hold, a relation, a two-entry log."
+
+[[case]]
+name = "components"
+verdict = "conformant"
+rule = "2.7"
+note = "One component, listed and present."
+
+[[case]]
+name = "two-series"
+verdict = "conformant"
+rule = "2.4"
+note = "Two series, one awaiting its event (no trigger)."
+
+[[case]]
+name = "no-series"
+verdict = "conformant"
+rule = "2.2"
+note = "Captured but not yet classified: series is empty."
+
+[[case]]
+name = "second-profile"
+verdict = "conformant"
+rule = "FRAMEWORK 3"
+note = "Also carries a hypothetical handover profile; a records implementation reads only its own table."
+
+[[case]]
+name = "unknown-key"
+verdict = "conformant"
+rule = "2.2"
+note = "A key this version does not define, which an implementation preserves."
+
+[[case]]
+name = "missing-id"
+verdict = "non-conformant"
+rule = "2.2"
+note = "No id."
+
+[[case]]
+name = "id-not-uuid"
+verdict = "non-conformant"
+rule = "CONVENTIONS 1"
+note = "id is not a UUID in the hyphenated lowercase form."
+
+[[case]]
+name = "created-is-datetime"
+verdict = "non-conformant"
+rule = "2.2"
+note = "created must be a date; a date-time is not one."
+
+[[case]]
+name = "captured-is-local"
+verdict = "non-conformant"
+rule = "CONVENTIONS 4"
+note = "captured names no zone."
+
+[[case]]
+name = "size-is-string"
+verdict = "non-conformant"
+rule = "2.2"
+note = "size must be an integer."
+
+[[case]]
+name = "agent-without-id"
+verdict = "non-conformant"
+rule = "CONVENTIONS 2"
+note = "An agent needs email and id."
+
+[[case]]
+name = "series-empty-code"
+verdict = "non-conformant"
+rule = "2.4"
+note = "A series code must be non-empty."
+
+[[case]]
+name = "series-duplicate-code"
+verdict = "non-conformant"
+rule = "2.4"
+note = "Two entries with one code."
+
+[[case]]
+name = "hold-unknown-type"
+verdict = "non-conformant"
+rule = "2.5"
+note = "Hold type outside legal and extension."
+
+[[case]]
+name = "hold-duplicate-matter"
+verdict = "non-conformant"
+rule = "2.5"
+note = "One matter applied twice."
+
+[[case]]
+name = "relation-unknown-type"
+verdict = "non-conformant"
+rule = "2.6"
+note = "A relation type outside the vocabulary."
+
+[[case]]
+name = "component-missing-member"
+verdict = "non-conformant"
+rule = "2.7"
+note = "A component listed that the container does not hold."
+
+[[case]]
+name = "component-unlisted-member"
+verdict = "non-conformant"
+rule = "2.7"
+note = "A member under records/components/ that no entry names."
+
+[[case]]
+name = "component-outside-prefix"
+verdict = "non-conformant"
+rule = "2.7"
+note = "A component whose member is not under records/components/."
+
+[[case]]
+name = "no-events-log"
+verdict = "non-conformant"
+rule = "2.8"
+note = "No records/events.toml."
+
+[[case]]
+name = "events-head-wrong"
+verdict = "non-conformant"
+rule = "2.8"
+note = "events_head does not hash the last entry."
+
+[[case]]
+name = "events-first-not-captured"
+verdict = "non-conformant"
+rule = "2.8"
+note = "The first entry is not captured."
+
+[[case]]
+name = "events-chain-broken"
+verdict = "non-conformant"
+rule = "CONVENTIONS 5.3"
+note = "The second entry's prev does not hash the first entry's bytes."
+
+[[case]]
+name = "events-wrong-seed"
+verdict = "non-conformant"
+rule = "2.8"
+note = "The log belongs to another record: its first prev is seeded from a different id."
+
+[[case]]
+name = "events-unknown-type"
+verdict = "non-conformant"
+rule = "2.8"
+note = "An event type outside the table."
+
+[[case]]
+name = "events-crlf"
+verdict = "non-conformant"
+rule = "CONVENTIONS 5.2"
+note = "The log was rewritten with CRLF line endings."
+
+[[case]]
+name = "fixity-mismatch"
+verdict = "non-conformant"
+rule = "2.3"
+note = "content_sha256 does not hash the content file."
+
+[[case]]
+name = "kind-unknown"
+verdict = "non-conformant"
+rule = "FRAMEWORK 5"
+note = "A kind this version does not define."
+
+[[case]]
+name = "profile-uri-wrong"
+verdict = "non-conformant"
+rule = "FRAMEWORK 3"
+note = "The table is named records but its profile names another specification."

@@ -1,0 +1,31 @@
+slipcase_version = "1.1"
+
+[content]
+file = "invoice-2024-0117.pdf"
+
+[records]
+profile = "https://slipcaseformat.org/profiles/records"
+profile_version = "1.0"
+kind = "record"
+id = "01927c3e-8b2a-7d41-9f3c-2a6e5b1c4d7f"
+created = 2024-01-17
+captured = 2024-02-03T15:04:11Z
+mime_type = "application/pdf"
+size = 53
+essential = false
+events_head = "b5418ccca675395ec25de229a6601b6808518304e4f137f22d2db23e9bea2dc6"
+
+[records.creator]
+email = "jdoe@example.com"
+id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
+
+[records.custodian]
+email = "jdoe@example.com"
+id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
+
+[records.fixity]
+content_sha256 = "1636f03d3b129195cadf3bfbe7403e6f58eb0f2ec47556bde4aed504f7c67332"
+
+[[records.series]]
+code = "FIN-200"
+trigger = 2024-01-17

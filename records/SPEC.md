@@ -648,7 +648,7 @@ In addition to the intent's keys: `completed` (instant), `records_destroyed` (in
 | `previous_flyleaf_sha256` | The final flyleaf of batch N−1. For batch 1, the **genesis value**: `872a5013347fc0dcd51e6fe0af140a92b1881674b002fb2f069b2cbaaa16e88a`, the hash of the UTF-8 string `https://slipcaseformat.org/profiles/records#register-genesis`. |
 | `content_sha256` | The certificate. |
 | `manifest_sha256` | The final manifest. |
-| `journal_sha256` | The journal file. |
+| `journal_sha256` | The journal file, or, for a batch recovered before any outcome was journaled, the empty byte string. |
 
 Every hash is over stored bytes (CONVENTIONS §3). A register's chain is **intact** when, walking from batch 1, every final's five hashes are what they should be, every sequence from 1 to the last is present, no sequence is claimed twice, and every final's intent exists and matches. Verification reports the first batch at which any of this fails, and every unfinished intent; it never repairs.
 

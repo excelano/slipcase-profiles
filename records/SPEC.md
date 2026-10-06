@@ -724,6 +724,7 @@ Evaluating a record yields one **outcome**, the **reasons** for it (all that app
 | Reason | With |
 |---|---|
 | `permanent` | The series codes |
+| `retained` | The series codes whose action is `retain` or `transfer` |
 | `held` | The matter identifiers |
 | `awaiting_event` | The series codes with no trigger |
 | `period_not_elapsed` | Each series' due date |
@@ -732,6 +733,7 @@ Evaluating a record yields one **outcome**, the **reasons** for it (all that app
 | `series_retired` | Each retired code and its successor |
 | `series_not_computable` | The descriptive series' codes |
 | `undetermined_container` | |
+| `malformed_container` | The container is not a conformant Slipcase container, so no profile can be read from it |
 | `slipcase_version_unsupported`, `profile_version_unsupported`, `malformed_profile` | What was found |
 
 | Flag | |

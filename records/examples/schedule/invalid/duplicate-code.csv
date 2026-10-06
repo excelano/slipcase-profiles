@@ -1,0 +1,3 @@
+GRS ID,Record Title,Classification (General),Legal Citation,Disposition,Retention (Years),Retention Type,Event Type (General),Longer Retention Authorized?,Deviations Allowed?,Disposition Authority,Comments,x_disposal_action,x_cutoff,x_period_kind,x_maximum,x_citation_defining,x_jurisdiction
+FIN-200,Accounts payable,Financial Management,"IRC 6001",Temporary,6,Event_Age,Final action,Yes,Yes,FIN-POL-3,,destroy,fiscal_year,minimum,,yes,
+FIN-200,Accounts payable,Financial Management,"IRC 6001",Temporary,6,Event_Age,Final action,Yes,Yes,FIN-POL-3,,destroy,fiscal_year,minimum,,yes,

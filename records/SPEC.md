@@ -70,7 +70,7 @@ trigger = 2024-01-17
 [records.series.snapshot]
 title = "Accounts Payable"
 retention = "6"
-retention_type = "Event_age"
+retention_type = "Event_Age"
 event_type = "Final action"
 disposition = "Temporary"
 schedule_version = "20261005T140211Z-3fa9c2e1b7d0"
@@ -135,7 +135,7 @@ trigger = 2024-01-17
 [records.series.snapshot]
 title = "Accounts Payable"
 retention = "6"
-retention_type = "Event_age"
+retention_type = "Event_Age"
 event_type = "Final action"
 disposition = "Temporary"
 schedule_version = "20261005T140211Z-3fa9c2e1b7d0"
@@ -282,3 +282,223 @@ The content file and the components MAY change after capture. Every change is lo
 - Removing a component, or replacing the content file, is a partial destruction outside disposition. It MUST NOT be done while the record is under any hold (§2.5). The entry (`component_removed`, `content_replaced`) records the old hash and a reason, and `fixity`, `mime_type`, and `size` are updated in the same operation.
 
 A record never loses its `id`, and nothing in this profile edits an earlier entry of the log.
+
+## 3. Retention schedules
+
+A schedule says, for each series, how long records under it are kept and what happens then. The records manager maintains it elsewhere; this profile defines the form in which it is stored in the records root and read by every implementation.
+
+### 3.1 Form
+
+A schedule is a CSV file in the layout NARA publishes the General Records Schedules in ("machine-implementable format"; <https://www.archives.gov/records-mgmt/grs/machine-implementable-grs>). NARA's own file MUST load under this section with no mapping and no error; `examples/schedule/grs-transmittal36.csv` is that file as published and is the test.
+
+- UTF-8, with or without a byte order mark. Lines end with LF or CRLF. Fields are quoted and escaped as RFC 4180 describes, and a quoted field MAY contain line breaks.
+- The first row names the columns. Column order is free. A column whose name is empty is ignored, as are the cells under it. A column this section does not name is ignored and MUST be preserved by any implementation that rewrites the file.
+- Column names and the values of controlled columns are compared after trimming leading and trailing whitespace and without regard to ASCII case. Values are stored as written.
+- A row whose cells are all empty is ignored.
+
+### 3.2 Columns
+
+These columns MUST be present:
+
+| Column | |
+|---|---|
+| `GRS ID` | The series code: the organization's own code (`FIN-200`), or NARA's where the GRS is used as is. Non-empty. |
+| `Record Title` | The series' title. |
+| `Disposition` | `Temporary` or `Permanent`. |
+| `Retention (Years)`, or `Retention` | The retention period (§3.3). NARA's FAQ names this column `Retention` and its file names it `Retention (Years)`; either name is this column, and a file MUST NOT carry both. |
+| `Retention Type` | `Creation_Age` (measured from the record's `created`) or `Event_Age` (measured from an event). |
+| `Event Type (General)` | For `Event_Age`, the event retention is measured from (§3.3). |
+| `Longer Retention Authorized?` | `Yes`: the period is a minimum. `No`: the period is fixed. |
+
+These NARA columns MAY be present and are informational, except as noted:
+
+| Column | |
+|---|---|
+| `Classification (General)` | A grouping, for display. |
+| `Legal Citation` | The citation the period rests on. |
+| `Deviations Allowed?` | `Yes` or `No`. |
+| `Disposition Authority` | The authority reference. |
+| `Superseded by` | Non-empty when the row is retired in favour of the series it names (§3.3). |
+| `Last Updated` | When NARA last changed the row. |
+| `Comments` | Free text. |
+
+### 3.3 Values, and what a row means
+
+In a controlled NARA column, the values `N/A`, `NA`, `[Variable]`, and an empty cell all mean **not stated**. The column's vocabulary is NARA's: a value outside it is not an error in the file, and it is not stated either. (Extension columns, §3.4, are this profile's, and their vocabularies are closed.)
+
+**The period** is the `Retention (Years)` value, read as:
+
+| Form | Meaning |
+|---|---|
+| An unsigned integer, `0` included | That many years. `0` means the record is eligible as soon as its trigger, after any cutoff, has passed. |
+| An unsigned integer followed by `m` | That many months. |
+| An unsigned integer followed by `d` | That many days. |
+| Anything else | Not stated. NARA's file carries ranges (`4-7`), hours (`72h`), and `[Variable]`; this profile computes no period from them. |
+
+**The event** is the `Event Type (General)` value. Four values are general events with meaning under this profile; any other stated value is a named event, which an organization records when it happens (§2.8, `event_applied`), and which this profile treats like `Final action`:
+
+| Value | The trigger is |
+|---|---|
+| `End of FY` | The record's `created`, with the fiscal-year cutoff applied (§8.2). Stated for a `Creation_Age` row, it adds the cutoff; stated for an `Event_Age` row, it is the event. |
+| `Final action` | The date the matter the record belongs to was closed, as recorded by `event_applied`. |
+| `No longer needed` | The date the organization decided it no longer needed the record, as recorded by `event_applied`. |
+| `Superseded or obsolete` | The date the record was superseded or became obsolete, as recorded by `event_applied`. |
+
+A row is **permanent** when `Disposition` is `Permanent`, whatever else it says. Records under a permanent series are never destroyed under this profile (§8).
+
+A row is **retired** when `Superseded by` is non-empty. A retired row stays in the schedule so that records already under it can be read; an implementation MUST NOT classify a record under a retired series, and evaluation of a record already under one reports the successor (§8).
+
+A row that is neither permanent nor retired is **computable** when its `Disposition` is `Temporary`, its `Retention Type` is stated, its period is stated, and, for `Event_Age`, its event is stated. Otherwise it is **descriptive**: it loads, it can be looked up and displayed, and a record under it cannot be evaluated (§8). NARA's file has rows of every kind, and loads.
+
+### 3.4 Extension columns
+
+What NARA's layout lacks goes in columns whose names begin with `x_`. A file using none is a NARA-layout file; a file using them is still one, since the extra columns are ignored by anything that does not know them. Extension columns are never folded into NARA's columns, and an extension's vocabulary is closed: a value outside it is an error, and the file MUST be refused.
+
+| Column | Values | Meaning |
+|---|---|---|
+| `x_disposal_action` | `destroy`, `transfer`, `review`, `retain` | What happens when the period elapses. Absent: `destroy` for `Temporary`, `retain` for `Permanent`. `review` is MoReq2010's review: a person decides (§8.4). `transfer` is reserved: records under it are treated as `retain` in this version. |
+| `x_cutoff` | `none`, `calendar_year`, `fiscal_year`, `quarter`, `month` | Retention starts at the end of the cutoff period containing the trigger (§8.2). Absent: `fiscal_year` where the event is `End of FY`, otherwise `none`. |
+| `x_period_kind` | `minimum`, `maximum`, `fixed` | Absent: `minimum` where `Longer Retention Authorized?` is `Yes`, `fixed` where it is `No`, and `minimum` where it is not stated. A `maximum` is a deadline (§8.3). |
+| `x_maximum` | A period, as §3.3 reads one | A series that has both a minimum and a maximum states the minimum in the period column and the maximum here, on the one row. Where present, `x_period_kind` MUST be absent or `minimum`. |
+| `x_citation_defining` | `yes`, `no` | Whether `Legal Citation` sets the period or only supports it. Informational. |
+| `x_jurisdiction` | Free text | For a schedule that carries a baseline and per-jurisdiction variants: one row per variant, same code, different jurisdiction. |
+
+### 3.5 Uniqueness
+
+Within a file, no two rows MAY carry the same `GRS ID` and the same `x_jurisdiction` (empty counting as a value). A file that does is malformed and MUST be refused, as is a file missing a required column or carrying a row with an empty `GRS ID`. Refusal reports every problem with the row it is in.
+
+### 3.6 The store
+
+Schedules live in the records root (§7) as versions that are never edited:
+
+```
+schedule/
+  current                                   # one line: the current version's identifier
+  versions/
+    20261005T140211Z-3fa9c2e1b7d0.csv       # the schedule
+    20261005T140211Z-3fa9c2e1b7d0.toml      # about that version
+```
+
+- A **version identifier** is the UTC instant the version was written, as `YYYYMMDDThhmmssZ`, a hyphen, and the first twelve hexadecimal digits of the CSV's hash.
+- The `.toml` beside a version records `imported` (instant), `imported_by` (agent), `source` (string: where the schedule came from, as a person would say it), `tool` (string, as §2.8), and `sha256` (hash of the CSV).
+- A version is never changed. A change to the schedule is a new version.
+- `current` holds the identifier of the version in force and nothing else, followed by LF. It is replaced by writing a new file beside it and renaming over it, so that a reader sees the old version or the new and never a partial file. A reader reads `current`, then the version it names.
+- Every record's series snapshot and every disposal plan records the version identifier it was taken from or evaluated against, so that any decision traces to the exact schedule in force.
+
+## 4. Hold matters
+
+Reserved for the next draft.
+
+## 5. Aggregations
+
+Reserved for the next draft.
+
+## 6. The disposition register
+
+Reserved for the next draft.
+
+## 7. The records root
+
+A records root is a directory holding everything a records-management system keeps centrally, as plain files. Records themselves live anywhere: on any share, in any folder structure. The root is the only central place, and nothing in it is a record.
+
+```
+records-root/
+  settings.toml
+  schedule/              # §3.6
+  register/              # §6
+  holds/                 # §4
+  aggregations/          # §5
+  fixity/                # sweep reports, §9
+```
+
+### 7.1 Settings
+
+```toml
+organization = "Example Corporation"
+fiscal_year_start_month = 10
+
+[roots.legal]
+windows = '\\files\legal'
+macos = "/Volumes/legal"
+linux = "/mnt/legal"
+```
+
+- **`organization`** — string. The organization's name, as it appears on a certificate.
+- **`fiscal_year_start_month`** — integer, 1 to 12. The month the fiscal year begins (§8.2).
+- **`roots`** — a table of **share roots**, each a table keyed by platform (`windows`, `macos`, `linux`) giving the path at which that share is mounted there. A root's name is what event locations record (§2.8.1). A platform with no entry cannot resolve that root, and a container found there has a location with no `root`.
+
+A root's name is permanent once any event has recorded it: renaming it would orphan every location that names it. A root's mount paths MAY change.
+
+## 8. Eligibility
+
+Eligibility is defined here and computed by an implementation of §9. It is a function of a record, the schedule in force, the settings, the active hold matters, and an **evaluation date**, which is always given: nothing in this section reads a clock.
+
+### 8.1 Outcome
+
+Evaluating a record yields one **outcome**, the **reasons** for it (all that apply), and any **flags**.
+
+| Outcome | |
+|---|---|
+| `eligible` | The record MAY be destroyed. §8.5 holds. |
+| `not_eligible` | It may not, for the reasons given. |
+| `review_due` | A `review` series has fallen due and no `reviewed` event has decided it (§8.4). |
+| `cannot_evaluate` | The record, or a series it is under, cannot be read well enough to say. |
+
+| Reason | With |
+|---|---|
+| `permanent` | The series codes |
+| `held` | The matter identifiers |
+| `awaiting_event` | The series codes with no trigger |
+| `period_not_elapsed` | Each series' due date |
+| `no_series` | |
+| `unknown_series` | The codes the schedule does not carry |
+| `series_retired` | Each retired code and its successor |
+| `series_not_computable` | The descriptive series' codes |
+| `undetermined_container` | |
+| `slipcase_version_unsupported`, `profile_version_unsupported`, `malformed_profile` | What was found |
+
+| Flag | |
+|---|---|
+| `past_maximum` | A `maximum` period has elapsed (§8.3). |
+| `max_before_min_conflict` | One series' maximum falls before another's minimum (§8.3). |
+| `snapshot_drift` | A series snapshot disagrees with the schedule in force (§2.4). |
+
+Where the record can be read, the earliest date it could become eligible is also reported, when it can be computed.
+
+### 8.2 Dates
+
+Dates are civil dates. No time zone takes part.
+
+A series' **trigger** is `created` for `Creation_Age`, and the series entry's `trigger` for `Event_Age` (§2.4). An `Event_Age` series with no trigger is **awaiting its event**.
+
+The **cutoff** (§3.4, `x_cutoff`) moves the start of retention to the last day of the period containing the trigger: the calendar year, the fiscal year (which begins on the first day of `fiscal_year_start_month`), the quarter of the calendar year, or the month. `none` leaves the trigger as it is.
+
+The **due date** is the cutoff date plus the period. Adding years or months lands on the same day of the resulting month, or on its last day where that day does not exist: February 29 plus one year is February 28. Adding days is exact.
+
+A series is **due** when the evaluation date is on or after its due date.
+
+### 8.3 Minimum, fixed, maximum
+
+A `minimum` or `fixed` period makes the series due at its due date. A `maximum` period makes the series due at its due date and sets the `past_maximum` flag once the evaluation date is past it. A series with both (§3.4, `x_maximum`) is due at the minimum's date and flagged past the maximum's.
+
+A hold always wins over a maximum: a held record past its maximum is `not_eligible` and flagged, and when the hold is released it goes to the head of whatever queue the implementation keeps.
+
+Where a record has several series and one series' maximum falls before another's minimum, the record is flagged `max_before_min_conflict` and is `not_eligible` until a person resolves it. This profile never resolves it.
+
+### 8.4 Review
+
+Where a series' action is `review`, the series falling due makes the record `review_due`. A person then applies a different series, sets a new period, or confirms the action, with a comment, and the decision is recorded as a `reviewed` event (§2.8). Until then the record is not eligible, and after a decision that keeps a `review` series, retention restarts from the review date.
+
+### 8.5 Eligible
+
+A record is `eligible` when, and only when:
+
+1. it has at least one series, and every series is due with action `destroy`;
+2. no series is permanent or has action `retain` or `transfer`;
+3. no series is `review` and undecided;
+4. it has no holds (§2.5), and no active hold matter's scope (§4) matches it;
+5. no flag in §8.3 blocks it.
+
+A record with several series is eligible only when it is eligible under every one of them: the longest retention governs.
+
+Eligibility is as of the evaluation date and the schedule version evaluated against, and an implementation that destroys re-checks it (§6) at the moment of destruction.

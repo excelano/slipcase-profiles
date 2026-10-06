@@ -78,3 +78,39 @@ The log's mechanics are CONVENTIONS §5 and the reasoning for them is in the top
 ## 9. Non-goals in 1.0
 
 Format identification beyond a media type (PRONOM); the key is reserved so that adding it is not a version change for anything else. Access control: `marking` is a string a person reads, and the profile takes no decision from it, because a profile that enforced access would have to know about users and permissions, which belong to the file share. Transfer of permanent records, which is the one place nested containers are intended to appear. Full-text search, which is an index.
+
+## 10. The schedule: NARA's layout, as NARA writes it
+
+**NARA's CSV layout rather than a format of this profile's own (SPEC §3.1).** The General Records Schedules are the one retention schedule published in a machine-readable form by an authority with no product to sell, and every United States federal agency already holds its records against them. A schedule format that could not load that file unchanged would be asking every organization to translate, and the translation is where the errors would live. So the requirement is absolute and testable: the published file is in the repository and loads with no mapping and no error.
+
+**What the file actually contains decided several rules.** The FAQ describes a layout; the file departs from it, and the file wins because the file is what an organization downloads. The column is `Retention (Years)`, not `Retention`, so both names are the column. The values are `Event_Age` and `Creation_Age` with a capital A, so controlled values compare without regard to case. One row has `Final action ` with a trailing space, so values are trimmed. Fourteen trailing columns have empty names, so an empty-named column is ignored. Thirteen fields hold line breaks inside quotes, so a reader needs a real CSV parser and not a line splitter. Each of these was found by loading the file, and `examples/schedule/SOURCE.md` lists them so that the next transmittal can be checked against the same list.
+
+**Descriptive rows load; they do not compute (SPEC §3.3).** Fifty-four rows of the GRS state no retention type, period, or event, because the published instruction cannot be reduced to one (an OPF is kept as long as the person is employed and then sent elsewhere). Two more state a range and one states hours. The first design refused any row it could not compute, which refused the GRS. The second accepted them as rows with no period, which is the design: a descriptive row is a real series a record can be classified under, and a record under it has an answer to "when may this be destroyed", which is "not by this profile". That answer is `cannot_evaluate` with the series named, and a person decides. Refusing to guess is the principle; refusing to load would have been refusing to help.
+
+**NARA's vocabularies are open, this profile's are closed.** A value outside NARA's set in a NARA column is "not stated", because NARA's columns are NARA's and the next transmittal may add a value (it added `Submission` and `End of service` to the event column after the FAQ was written). A value outside the set in an `x_` column is an error, because the column is this profile's and a misspelling there is a mistake nobody else will catch.
+
+**A retired row stays (SPEC §3.3).** Four GRS rows are superseded and say by what. Dropping them would leave records already classified under them pointing at nothing. Keeping them, forbidding new classification, and reporting the successor at evaluation is what lets a records manager find and reclassify those records rather than discover them as unknown series.
+
+**`x_event_name` was in the first design and is not in this one.** It was to carry events finer than NARA's four general types. The file itself carries them in `Event Type (General)` (`End of service`, `Survey completion`), so a second column for the same thing would have been two places for one fact. A stated value outside the four is a named event, which is what the extension would have said.
+
+**Minimum and maximum on one row (SPEC §3.4, `x_maximum`).** The alternative was two rows for one code, distinguished by `x_period_kind`, which breaks the rule that a code appears once per jurisdiction and makes "the series FIN-200" two things. A second period column on the same row keeps one row per series, and the constraint that `x_period_kind` is then absent or `minimum` stops the row contradicting itself.
+
+**Versions that are never edited (SPEC §3.6).** A schedule change is a decision with a date and a person, and a record's snapshot and a disposal plan both name the version they used. Editing a version in place would make those references lie. The identifier carries the instant and a hash prefix so that two imports a second apart cannot collide and a renamed file cannot pass for another.
+
+## 11. The records root and share roots
+
+**One central directory of plain files (SPEC §7).** Everything a records system keeps that is not inside a record has to live somewhere, and the choice was between a database and a directory. A directory of TOML, CSV, and containers is readable by anyone, diffable, backed up by whatever backs up the share, and is the same thing on every platform. What it costs is speed on large registers, and a register is read in full only by `verify`, which is the operation that should read everything.
+
+**Share roots are in the settings, named once.** The reasoning is in §7 of this document under location. The settings are where the names are declared because the settings are the one file every implementation reads before it does anything else, and a root name is meaningless until something declares what it stands for on this platform.
+
+## 12. Eligibility
+
+**An evaluation date is always given (SPEC §8).** A function of the clock is a function that cannot be tested against a fixed answer, and eligibility is the computation that destroys records. The implementation's command line defaults to today and says so; the definition does not know what today is.
+
+**Civil dates, month-end clamping, cutoffs (SPEC §8.2).** Retention schedules are written in years and months from a date, by people who mean calendar arithmetic, and the only question such arithmetic leaves open is what February 29 plus a year is. Clamping to the month's last day is what every records manager would say, and it is stated so that no two implementations differ by a day. Cutoffs are stated the same way because "three years after the end of the fiscal year in which the record was created" is how schedules are written, and the fiscal year's start is the one organizational fact the arithmetic needs.
+
+**The longest retention governs (SPEC §8.5).** A record under two series is eligible only when both say so, because the alternative is destroying a record one series still requires. A permanent series anywhere makes the record permanent for the same reason, stated separately because it is the case that matters most.
+
+**Flags are not decisions (SPEC §8.3).** A record past its maximum while on hold, or whose series conflict, is a record a person has to look at. The profile reports and stops. Resolving a maximum-before-minimum conflict automatically would mean choosing which law to break.
+
+**Review is a disposal action and an outcome (SPEC §8.4).** MoReq2010's review is the case where the schedule says "a person decides", and the profile makes that a first-class outcome rather than treating it as not-eligible-with-a-note, so that a records manager's queue of decisions is a query and not a search.

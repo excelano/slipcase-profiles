@@ -1,0 +1,2 @@
+GRS ID,Record Title,Classification (General),Legal Citation,Disposition,Retention (Years),Retention Type,Event Type (General),Longer Retention Authorized?,Deviations Allowed?,Disposition Authority,Comments,x_disposal_action,x_cutoff,x_period_kind,x_maximum,x_citation_defining,x_jurisdiction
+PRIV-010,Marketing consent records,Privacy,"GDPR Art. 17",Temporary,2,Event_Age,No longer needed,Yes,No,PRIV-POL-2,,destroy,none,fixed,5,,

@@ -1,0 +1,10 @@
+GRS ID,Record Title,Classification (General),Legal Citation,Disposition,Retention (Years),Retention Type,Event Type (General),Longer Retention Authorized?,Deviations Allowed?,Disposition Authority,Comments,x_disposal_action,x_cutoff,x_period_kind,x_maximum,x_citation_defining,x_jurisdiction
+FIN-200,Accounts payable,Financial Management,"IRC 6001",Temporary,6,Event_Age,Final action,Yes,Yes,FIN-POL-3,,destroy,fiscal_year,minimum,,yes,
+FIN-210,Expense reports,Financial Management,,Temporary,3,Creation_Age,,Yes,Yes,FIN-POL-3,,,calendar_year,,,,
+HR-100,Personnel files,Employee Management,,Temporary,7,Event_Age,End of service,No,No,HR-POL-1,,destroy,none,fixed,,,
+HR-100,Personnel files,Employee Management,"BDSG §26",Temporary,3,Event_Age,End of service,No,No,HR-POL-1,German subsidiary,destroy,none,fixed,,,DE
+PRIV-010,Marketing consent records,Privacy,"GDPR Art. 17",Temporary,2,Event_Age,No longer needed,Yes,No,PRIV-POL-2,,destroy,none,,5,,
+LEG-010,Contracts,Legal,,Temporary,10,Event_Age,Final action,Yes,Yes,LEG-POL-4,Reviewed before destruction,review,calendar_year,minimum,,,
+GOV-001,Board minutes,Governance,,Permanent,N/A,N/A,N/A,N/A,No,GOV-POL-1,,,,,,,
+OPS-040,"Shift logs, all sites",Operations,,Temporary,90d,Creation_Age,,Yes,Yes,OPS-POL-9,"Multi-line
+comment",destroy,month,,,,

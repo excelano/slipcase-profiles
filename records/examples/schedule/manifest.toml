@@ -1,0 +1,52 @@
+# Schedule examples, with the verdict section 3 reaches. grs-transmittal36.csv
+# is the NARA fixture (SOURCE.md) and loads with no error; organization.csv
+# is a schedule an organization might write, using every extension column.
+# Not normative: where a case and SPEC.md disagree, the specification wins.
+
+[[case]]
+file = "grs-transmittal36.csv"
+verdict = "loads"
+rule = "3.1"
+note = "NARA Transmittal 36 as published: 308 rows, every kind of row."
+
+[[case]]
+file = "valid/organization.csv"
+verdict = "loads"
+rule = "3.4"
+note = "Every extension column; a jurisdiction variant; a minimum with a maximum; a review series; a permanent series; a 90-day period with a month cutoff."
+
+[[case]]
+file = "invalid/duplicate-code.csv"
+verdict = "refused"
+rule = "3.5"
+note = "One code twice for one jurisdiction."
+
+[[case]]
+file = "invalid/unknown-extension-value.csv"
+verdict = "refused"
+rule = "3.4"
+note = "x_disposal_action outside its set."
+
+[[case]]
+file = "invalid/missing-column.csv"
+verdict = "refused"
+rule = "3.2"
+note = "No Retention Type column."
+
+[[case]]
+file = "invalid/empty-code.csv"
+verdict = "refused"
+rule = "3.5"
+note = "A row with no GRS ID."
+
+[[case]]
+file = "invalid/maximum-with-fixed.csv"
+verdict = "refused"
+rule = "3.4"
+note = "x_maximum beside x_period_kind fixed."
+
+[[case]]
+file = "invalid/both-retention-columns.csv"
+verdict = "refused"
+rule = "3.2"
+note = "Retention (Years) and Retention both present."

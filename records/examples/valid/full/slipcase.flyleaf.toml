@@ -34,7 +34,7 @@ marking = "Confidential"
 [records.series.snapshot]
 title = "Accounts Payable"
 retention = "6"
-retention_type = "Event_age"
+retention_type = "Event_Age"
 event_type = "Final action"
 disposition = "Temporary"
 schedule_version = "20261005T140211Z-3fa9c2e1b7d0"

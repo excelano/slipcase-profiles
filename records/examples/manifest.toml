@@ -94,10 +94,10 @@ rule = "2.4"
 note = "Two entries with one code."
 
 [[case]]
-name = "hold-unknown-type"
+name = "record-hold-unknown-type"
 verdict = "non-conformant"
 rule = "2.5"
-note = "Hold type outside legal and extension."
+note = "A record's hold entry with a type outside legal and extension."
 
 [[case]]
 name = "hold-duplicate-matter"

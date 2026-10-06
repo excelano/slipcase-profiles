@@ -71,7 +71,7 @@ The log's mechanics are CONVENTIONS §5 and the reasoning for them is in the top
 
 ## 8. Changes after capture
 
-**Permitted, and logged as partial destruction.** A records profile that forbade all change after capture would be simpler and would be ignored, because content does get corrected and parts do get added. Permitting it with a log entry that names what was lost, its hash, and why, keeps the record honest about its own history. The hold rule (§5) is what stops the permission being abused while it matters most.
+**Permitted, and logged as partial destruction.** A records profile that forbade all change after capture would be simpler and would be ignored, because content does get corrected and parts do get added. Permitting it with a log entry that names what was lost, its hash, and why, keeps the record's account of its own history true. The hold rule (§5) is what stops the permission being abused while it matters most.
 
 **What this version does not do** is keep the replaced content. SEC 17a-4's audit-trail alternative requires that an original be recreatable after modification, not only that its existence be provable; serving that market means retaining prior versions, which is a different and larger design. The entry records the old hash so that a prior version kept elsewhere can be matched to it.
 

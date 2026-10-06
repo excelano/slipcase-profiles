@@ -402,7 +402,7 @@ type = "legal"
 mandate = "Litigation hold, counsel's instruction of 2026-03-11"
 placed = 2026-03-12
 status = "active"
-scope = "custodian.email in ['jdoe@example.com', 'asmith@example.com'] and created >= 2023-01-01"
+scope = "custodian.email in (\"jdoe@example.com\", \"asmith@example.com\") and created >= 2023-01-01"
 events_head = "..."
 
 [records.approved_by]

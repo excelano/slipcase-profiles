@@ -419,7 +419,7 @@ id = "7a6b5c4d-3e2f-4a1b-9c8d-7e6f5a4b3c2d"
 | `approved_by` | agent | Who authorized the hold. |
 | `placed` | date | When the hold was placed. |
 | `end_date` | date, optional | For an `extension`, when it releases itself (§4.3). |
-| `scope` | string | A SlipQL `where` expression (<https://github.com/excelano/slipql>) over a record's flyleaf. The hold applies to every record it is true for. |
+| `scope` | string | A SlipQL `where` expression (<https://github.com/excelano/slipql>) over a record's `[records]` table: paths in it are relative to that table, so `custodian.email` names the custodian's address, and no other profile's table is reachable (FRAMEWORK §7). The hold applies to every record it is true for. |
 | `status` | string | `active` or `released`. |
 | `released` | date | Present when and only when `status` is `released`. |
 | `events_head` | hash | §4.2. |

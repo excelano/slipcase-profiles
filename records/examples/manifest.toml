@@ -244,6 +244,18 @@ rule = "5.1"
 note = "An empty title."
 
 [[case]]
+name = "review-decided"
+verdict = "conformant"
+rule = "8.4"
+note = "A review series decided: a reviewed entry with decision destroy, dated after the series fell due."
+
+[[case]]
+name = "events-reviewed-decision-unknown"
+verdict = "non-conformant"
+rule = "2.8"
+note = "A reviewed entry whose decision is not reclassify, extend, or destroy."
+
+[[case]]
 name = "register"
 verdict = "conformant"
 rule = "6.6"

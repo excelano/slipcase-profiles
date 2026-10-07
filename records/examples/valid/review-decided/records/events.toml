@@ -1,0 +1,18 @@
+[[event]]
+seq = 1
+at = 2024-02-03T15:04:11Z
+prev = "11bea12d8e12dbe5505968cf4501bc6a53e44304021054ea8de76e0b069eae37"
+type = "captured"
+actor = { email = "jdoe@example.com", id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b" }
+tool = "slipcase-fileroom 0.1.0"
+location = { root = "legal", path = "contracts/C-4471/invoice-2024-0117.pdf.slpc", raw = '\\files\legal\contracts\C-4471\invoice-2024-0117.pdf.slpc' }
+
+[[event]]
+seq = 2
+at = 2030-01-20T10:00:00Z
+prev = "4da52b916278a4d926cc63d37b51198c464ba6dee05c36fd14ec13f42371c6c3"
+type = "reviewed"
+actor = { email = "jdoe@example.com", id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b" }
+tool = "slipcase-fileroom 0.1.0"
+location = { root = "legal", path = "contracts/C-4471/invoice-2024-0117.pdf.slpc", raw = '\\files\legal\contracts\C-4471\invoice-2024-0117.pdf.slpc' }
+detail = { code = "FIN-200", decision = "destroy", comment = "Confirmed at the 2030 review; nothing in the file requires longer retention." }

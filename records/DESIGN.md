@@ -115,6 +115,8 @@ Format identification beyond a media type (PRONOM); the key is reserved so that 
 
 **Review is a disposal action and an outcome (SPEC §8.4).** MoReq2010's review is the case where the schedule says "a person decides", and the profile makes that a first-class outcome rather than treating it as not-eligible-with-a-note, so that a records manager's queue of decisions is a query and not a search.
 
+**Three decisions, named in the event (SPEC §8.4).** A review ends one of three ways, and the log says which, because an eligibility computed later has to know whether "reviewed" meant "keep" or "destroy" without a person to ask. `reclassify` and `extend` are what a records manager does with a record that stays; `destroy` is the one that lets a review series fall through to destruction, and it is the decision that needs a word of its own, since a review series' own action is `review` and would otherwise never be `destroy`. The latest decision on or after the due date is the one that counts, so a decision from an earlier review cannot be mistaken for the one now due.
+
 ## 13. Holds and aggregations as containers
 
 **Defined centrally, applied to records (SPEC §4, §5).** A hold matter and an aggregation are each one thing with one history, and the records they touch are many. The definition lives in one container in the records root; each record carries only a pointer (a `holds` entry, a `member-of` relation). Releasing a matter is then one change to the definition plus one small change per record, each logged where it belongs, and the question "who released this and when" has one answer in one place.
@@ -166,3 +168,5 @@ Format identification beyond a media type (PRONOM); the key is reserved so that 
 **Paths in logs are never opened (SPEC §10).** A log is data that anyone who can write a container can write. Treating a path from it as a place to delete would make the register a weapon.
 
 **What the profile protects and what it detects.** Anyone with write access can delete records and can delete the register. The profile makes both detectable, by fixity and by the chain, and does not pretend to prevent either; prevention is the file share's job and the organization's.
+
+**A verified operator is a setting, not a lock (SPEC §7.1, §9, §10).** An organization that signs its operators in wants every tool that writes in its root to refuse an operator who is not, and the setting is where every tool can read that. It is advisory by nature: the file is editable, the tool is patchable, and the profile says so rather than letting the key read as a control. What it prevents is the good-faith accident, a script run with nobody behind it; what prevents the rest is who may write the files. The profile names no identity provider, because a provider is a vendor and the profile is nobody's.

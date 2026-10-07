@@ -244,7 +244,7 @@ Each entry carries the keys CONVENTIONS §5.1 requires and:
 | `hold_applied` | A hold was applied | `matter` |
 | `hold_released` | A hold was released | `matter` |
 | `event_applied` | A series' trigger date was set | `code`, `trigger` (date) |
-| `reviewed` | A review fell due and was decided (§8) | `code`, `decision`, `comment` (non-empty) |
+| `reviewed` | A review fell due and was decided (§8.4) | `code`, `decision` (`reclassify`, `extend`, or `destroy`), `comment` (non-empty) |
 | `relation_added` | A relation was added | `type`, `target` |
 | `relation_removed` | A relation was removed | `type`, `target` |
 | `component_added` | A component was added | `member`, `sha256` |
@@ -703,6 +703,7 @@ linux = "/mnt/legal"
 - **`organization`** — string. The organization's name, as it appears on a certificate.
 - **`fiscal_year_start_month`** — integer, 1 to 12. The month the fiscal year begins (§8.2).
 - **`roots`** — a table of **share roots**, each a table keyed by platform (`windows`, `macos`, `linux`) giving the path at which that share is mounted there. A root's name is what event locations record (§2.8.1). A platform with no entry cannot resolve that root, and a container found there has a location with no `root`.
+- **`operator_identity`** — string, optional. The one value is `verified`: the organization requires that the person operating any implementation that writes in this root has been verified against an identity provider (§9). Absent, nothing is required.
 
 A root's name is permanent once any event has recorded it: renaming it would orphan every location that names it. A root's mount paths MAY change.
 
@@ -766,7 +767,15 @@ Where a record has several series and one series' maximum falls before another's
 
 ### 8.4 Review
 
-Where a series' action is `review`, the series falling due makes the record `review_due`. A person then applies a different series, sets a new period, or confirms the action, with a comment, and the decision is recorded as a `reviewed` event (§2.8). Until then the record is not eligible, and after a decision that keeps a `review` series, retention restarts from the review date.
+Where a series' action is `review`, the series falling due makes the record `review_due`. A person then decides, with a comment, and the decision is recorded as a `reviewed` event (§2.8) naming the series and one of three decisions. Until then the record is not eligible.
+
+| `decision` | What it means | After it |
+|---|---|---|
+| `reclassify` | The record belongs under a different series. | A `reclassified` entry in the same operation replaces the series (§2.4); the review series no longer governs the record. |
+| `extend` | The record is kept and reviewed again. | The series' period restarts from the review date, with the series' cutoff applied as for any trigger (§8.2), and the series falls due again at its end. |
+| `destroy` | The review confirms destruction. | The series is due from the review date with action `destroy`, as if the schedule had said so; the record's other series and holds still apply (§8.5). |
+
+A series is **decided** by the latest `reviewed` entry naming it whose date is on or after the series' due date; an earlier decision belongs to an earlier review and has no effect on the one now due. A `decision` outside the three is non-conformant.
 
 ### 8.5 Eligible
 
@@ -793,6 +802,7 @@ Beyond FRAMEWORK §11, an implementation of this profile:
 - MUST, when applying a hold, show the matching count before applying and report a scope matching nothing (§4.3).
 - MUST preview every bulk rewrite of records (renumbering, reclassifying an aggregation's members) as the exact set of containers and changes before performing it.
 - **Fixity sweep.** An implementation that checks fixity walks a scope and, for each record, verifies `fixity.content_sha256` against the content file and each component's `sha256` against its member, and compares the container's location (§2.8.1) with the last location in its log. It writes a report of the sweep in the records root's `fixity/` directory as a TOML file named by the sweep's start instant, holding `started`, `completed`, `scope`, counts, and every failure, move, and unreadable container; it appends `fixity_failed` and `moved_detected` to affected records' logs and nothing to the others; and it never alters a content file, a hash, or a location.
+- **Verified operators.** Where the settings say `operator_identity = "verified"` (§7.1), an implementation that has not verified the operating person's identity against an identity provider MUST NOT change a record, a hold matter, an aggregation, or the register in that root, and MUST name the setting when it refuses. It MAY read, check, verify, and evaluate as it otherwise would, and a fixity sweep under it MAY write its report, appending no event and saying in the report that it did not. How identity is verified is the implementation's; this profile defines no provider.
 - MUST apply the display rule of FRAMEWORK §11 to paths and titles as well as member names.
 
 ## 10. Security considerations
@@ -804,5 +814,7 @@ A hold's `scope` is an expression evaluated against every record. SlipQL has no 
 The register is evidence, and its protection is the chain and the write-once rule. Anyone with write access to `register/` can delete it; the profile makes that detectable (a missing sequence breaks verification), not impossible. An organization that needs the register to survive its administrators keeps a copy of each final's flyleaf hash somewhere they cannot reach, which this profile does not define.
 
 A certificate claims what the manifest says and no more. An implementation MUST NOT write a certificate before every outcome is known, and MUST NOT describe deletion as anything but removal from the repository unless it has done more and can state what.
+
+`operator_identity` is not an access control. Anyone with write access to a records root or a record can change either with any tool, and an implementation can be altered to ignore the setting. It exists so that an implementation written in good faith does not act in a root whose organization requires a verified operator, by accident or by script; who may write at all is decided by the permissions on the files, and an organization that requires verified operators grants write access accordingly.
 
 The plan a batch executes is a file the caller holds. The intent hashes the planned manifest, so a plan changed after approval is detected at the first record (`changed_since_plan` for every record whose flyleaf hash the changed plan misstates), but a plan is not signed, and approval is a statement the implementation records, not one it verifies.

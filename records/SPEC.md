@@ -607,7 +607,7 @@ Deletion is an ordinary filesystem delete. Nothing is overwritten, and nothing w
 | `reason` | For `skipped` and `failed`. |
 | `error` | For `failed`: the operating system's error text. |
 
-The journal is protected by the final's `journal_sha256` (§6.6), a hash of the whole file; it is complete when the final is written and is not appended to after.
+The journal is protected by the final's `journal_sha256` (§6.6), a hash of the whole file; it is complete when the final is written and is not appended to after. A journal of zero length is one whose writer died between creating the file and storing its first entry; a reader treats it as no journal, and the next outcome written becomes its first entry.
 
 ### 6.6 The final
 

@@ -11,7 +11,7 @@ id = "01927a55-2b1c-7e4d-9f6a-3c4d5e6f7a8b"
 title = ""
 status = "open"
 default_series = "LEG-010"
-events_head = "8fdc9b21541c8dd7034b0a4b2a08a908dbd18a36c5e1c5d5e44e43903552e850"
+events_head = "c8bf7221483240e19f5d897e89c36ed9e9f9f76db21ba7b05421deb8d3428488"
 
 [[records.relations]]
 type = "member-of"

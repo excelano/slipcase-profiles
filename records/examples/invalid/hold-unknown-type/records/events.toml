@@ -4,4 +4,4 @@ at = 2026-03-12T09:00:00Z
 prev = "d1858df52e325b9dc9adcc0eb73a053d0a2ff7505ba64dbff0ff0f810e746a6d"
 type = "placed"
 actor = { email = "rm@example.com", id = "5e4d3c2b-1a09-4f8e-9d7c-6b5a4f3e2d1c" }
-tool = "fileroom-pro 0.1.0"
+tool = "slipcase-fileroom 0.1.0"

@@ -4,7 +4,7 @@ at = 2024-02-03T15:04:11Z
 prev = "11bea12d8e12dbe5505968cf4501bc6a53e44304021054ea8de76e0b069eae37"
 type = "captured "
 actor = { email = "jdoe@example.com", id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b" }
-tool = "fileroom-pro 0.1.0"
+tool = "slipcase-fileroom 0.1.0"
 location = { root = "legal", path = "contracts/C-4471/invoice-2024-0117.pdf.slpc", raw = '\\files\legal\contracts\C-4471\invoice-2024-0117.pdf.slpc' }
 
 [[event]]
@@ -13,6 +13,6 @@ at = 2026-03-12T09:14:02Z
 prev = "28b0c6700e6ea5ca6a0bcf85b0c0d1bc5858228fc8a9511b01a18b1c4943f44f"
 type = "hold_applied"
 actor = { email = "jdoe@example.com", id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b" }
-tool = "fileroom-pro 0.1.0"
+tool = "slipcase-fileroom 0.1.0"
 location = { root = "legal", path = "contracts/C-4471/invoice-2024-0117.pdf.slpc", raw = '\\files\legal\contracts\C-4471\invoice-2024-0117.pdf.slpc' }
 detail = { matter = "01927d01-4c2e-7a3b-8d5f-1e2a3b4c5d6e" }

@@ -12,7 +12,7 @@ title = "Vendor contract C-4471"
 status = "closed"
 closed = 2026-06-30
 default_series = "LEG-010"
-events_head = "6b45191088422107de62268a11082cf1c98c2d52f51f6af6a3f4d3026cb09fe0"
+events_head = "2fa3a03efcdb8f8a300169fdae7b23f645b8346357c8992a57efef1ecd6f46cd"
 
 [[records.relations]]
 type = "member-of"

@@ -508,17 +508,18 @@ The register is the record of destruction: one entry per **batch**, where a batc
 
 ### 6.1 Files
 
-Each batch occupies three files, named by its **sequence**, a six-digit zero-padded decimal starting at `000001`. The journal appears with the batch's first outcome, so an intent with no journal is a run that has not yet touched a record:
+Each batch occupies four files, named by its **sequence**, a six-digit zero-padded decimal starting at `000001`. The lock file comes first, and the journal appears with the batch's first outcome, so an intent with no journal is a run that has not yet touched a record:
 
 ```
 register/
+  000123.lock            # empty; locked while a run or a recovery holds the batch (§6.7)
   000123.intent.slpc     # the claim and the plan; written once
   000123.journal         # one entry per record outcome, appended during the run
   000123.slpc            # the final; written once
   000124.intent.slpc     # unfinished: no final
 ```
 
-Batch N is **final** when `N.slpc` exists, and **unfinished** when `N.intent.slpc` exists without it. No file in the register is ever rewritten or removed: both containers are created with create-new semantics, and the journal is only appended to. A register therefore only gains files.
+Batch N is **final** when `N.slpc` exists, and **unfinished** when `N.intent.slpc` exists without it. No file in the register is ever rewritten or removed: both containers are created with create-new semantics, the journal is only appended to, and the lock file is never written. A register therefore only gains files.
 
 ### 6.2 The intent
 
@@ -658,7 +659,9 @@ Every hash is over stored bytes (CONVENTIONS §3). A register's chain is **intac
 
 A run MAY claim sequence N only when N−1 is final: batch N's final chains to N−1's, which does not exist while N−1 is running. A run that finds N−1 unfinished, or that loses the exclusive create for N, MUST refuse and report the unfinished batch: its sequence, host, user, start, and last journal entry.
 
-An unfinished intent is finished only by **recovery**, an explicit action that a person confirms, never by a run that happens to find it. No tool can tell a crashed run from one still executing on another machine, and finishing a live batch would record a partial manifest while destruction continued. Recovery:
+**The lock.** A run opens `N.lock`, creating it if absent, takes an exclusive lock on it before it creates `N.intent.slpc`, and holds the lock until its final is written. A run that cannot take the lock MUST refuse as it would on losing the exclusive create. Recovery takes the same lock before it reads the intent, holds it until the final is written, and MUST refuse while another process holds it. The lock belongs to the operating system and is released when its holder ends, however it ends, so a crashed run leaves nothing to clear. Where the file system cannot lock at all, a run and a recovery proceed without it, and the person's confirmation is the only guard.
+
+An unfinished intent is finished only by **recovery**, an explicit action that a person confirms, never by a run that happens to find it. A tool cannot always tell a crashed run from one still executing on another machine: the lock tells it where the file system carries locks between machines, and nothing tells it where the file system does not, or where the run predates the batch's lock file. Finishing a live batch would record a partial manifest while destruction continued. Recovery:
 
 1. reads the intent and the journal;
 2. for each planned record, takes the journal's outcome where the journal has one; where it has none, records `unknown` if the container is gone and `skipped` with reason `not_attempted` if it is present; it never assumes a record was destroyed;

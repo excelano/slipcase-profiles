@@ -24,6 +24,6 @@ For a specification the plausible defects are in the rules: a value a profile le
 
 ## Versions
 
-The framework and the conventions are versioned together; each profile is versioned on its own. A version's rules follow FRAMEWORK §6, which is Slipcase's §2.4 applied to profiles: while a version is a draft, changes land without moving the number; once it is final, a change to what counts as a conformant container moves the number, and an editorial change does not.
+The framework and the conventions are versioned together; each profile is versioned on its own. A version's number follows FRAMEWORK §6, which applies Slipcase's SPEC §2.4 to profiles: it moves when what counts as a conformant container changes, and an editorial change does not move it. That rule binds a version once it is final. While a version is a draft, changes land without moving the number, and the document's **Status** line says which it is.
 
 Example files are not normative. Where an example and a specification disagree, the specification wins and the example is a bug.

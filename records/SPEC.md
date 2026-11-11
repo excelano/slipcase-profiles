@@ -318,7 +318,7 @@ These NARA columns MAY be present and are informational, except as noted:
 | `Legal Citation` | The citation the period rests on. |
 | `Deviations Allowed?` | `Yes` or `No`. |
 | `Disposition Authority` | The authority reference. |
-| `Superseded by` | Non-empty when the row is retired in favour of the series it names (§3.3). |
+| `Superseded by` | Non-empty when the row is retired in favor of the series it names (§3.3). |
 | `Last Updated` | When NARA last changed the row. |
 | `Comments` | Free text. |
 

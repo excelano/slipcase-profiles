@@ -14,12 +14,12 @@ import tomllib
 
 def entries_of(data: bytes, name: str) -> list[bytes]:
     header = f"[[{name}]]\n".encode()
+    if b"\r" in data:
+        raise SystemExit("the file contains CR (CONVENTIONS 5.2)")
     if not data.startswith(header):
         raise SystemExit("the file does not begin with a header line (CONVENTIONS 5.2)")
     if not data.endswith(b"\n"):
         raise SystemExit("the file does not end with LF (CONVENTIONS 5.2)")
-    if b"\r" in data:
-        raise SystemExit("the file contains CR (CONVENTIONS 5.2)")
     starts = [0]
     at = 0
     while True:

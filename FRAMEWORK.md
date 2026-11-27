@@ -1,7 +1,7 @@
 # Slipcase Profiles — Framework
 
 **Version:** 1.0  
-**Status:** final  
+**Status:** draft  
 **Slipcase version:** 1.1
 
 A profile defines how Slipcase containers are used for one purpose. It gives meaning to keys in the flyleaf and to additional members, and it changes nothing in Slipcase itself. This document states what every profile has in common, so that a profile specification need only state what is particular to it, and so that a flyleaf can carry several profiles without any of them knowing about the others.

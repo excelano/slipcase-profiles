@@ -2,6 +2,7 @@
 # Built with AI assistance (Claude, Anthropic)
 
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -110,6 +111,37 @@ class CheckCore(unittest.TestCase):
                         got.stdout.startswith(f"non-conformant {case['rule']}:"),
                         got.stdout,
                     )
+
+    def test_the_word_fixture_maps_as_section_4_says(self):
+        import datetime
+        import xml.etree.ElementTree as ET
+
+        ns = {
+            "cp": "http://schemas.openxmlformats.org/package/2006/metadata/core-properties",
+            "dc": "http://purl.org/dc/elements/1.1/",
+            "dcterms": "http://purl.org/dc/terms/",
+        }
+        examples = REPO / "core" / "examples"
+        props = ET.parse(examples / "fixtures" / "word-core.xml").getroot()
+
+        def text(tag):
+            return props.find(tag, ns).text.strip()
+
+        core = tomllib.loads(
+            (examples / "valid" / "from-word" / "slipcase.flyleaf.toml").read_text()
+        )["core"]
+        created = datetime.datetime.fromisoformat(text("dcterms:created"))
+
+        self.assertEqual(core["title"], text("dc:title"))
+        self.assertEqual(core["creator"], [{"name": text("dc:creator")}])
+        self.assertIn(";", text("dc:creator"))
+        keywords = [k.strip() for k in re.split("[;,]", text("cp:keywords")) if k.strip()]
+        self.assertEqual(core["subject"], [text("dc:subject"), *keywords])
+        self.assertEqual(core["description"], text("dc:description"))
+        self.assertEqual(core["created"], created.astimezone(datetime.timezone.utc).date())
+        self.assertNotEqual(core["created"], created.astimezone(datetime.timezone(datetime.timedelta(hours=-6))).date())
+        self.assertEqual(set(core) - {"profile", "profile_version", "kind"},
+                         {"title", "creator", "subject", "description", "created", "modified"})
 
     def test_a_missing_case_is_a_usage_error(self):
         self.assertEqual(run("check-core.py", REPO / "no-such-case").returncode, 2)

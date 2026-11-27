@@ -1,0 +1,1 @@
+Stand-in content for the from-word example. Its core properties are fixtures/word-core.xml.

@@ -104,3 +104,9 @@ name = "license-not-uri"
 verdict = "non-conformant"
 rule = "5.8"
 note = "A license that is a phrase, not a URI; free text belongs in rights."
+
+[[case]]
+name = "from-word"
+verdict = "conformant"
+rule = "4.1"
+note = "Filled from fixtures/word-core.xml as §4.1 and §4.5 say: Subject then the split Keywords, the author string kept whole, created as its UTC date, lastModifiedBy and revision dropped."

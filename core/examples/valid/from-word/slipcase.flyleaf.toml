@@ -1,0 +1,17 @@
+slipcase_version = "1.1"
+
+[content]
+file = "invoice-review.txt"
+
+[core]
+profile = "https://slipcaseformat.org/profiles/core"
+profile_version = "1.0"
+kind = "resource"
+title = "Vendor invoice review, January 2024"
+description = "Review of vendor invoices received in January."
+subject = ["Accounts payable review", "invoice", "vendor", "2024"]
+created = 2024-01-18
+modified = 2024-01-19
+
+[[core.creator]]
+name = "Doe, J.; Roe, R."

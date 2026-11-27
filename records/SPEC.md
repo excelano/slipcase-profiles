@@ -523,7 +523,7 @@ Batch N is **final** when `N.slpc` exists, and **unfinished** when `N.intent.slp
 
 ### 6.2 The intent
 
-The intent is a container of kind `disposal-batch`, written before any record is destroyed. Creating it is how a run claims its sequence: a run MUST create `N.intent.slpc` exclusively, and MUST NOT proceed if the create fails. A run MUST NOT claim sequence N unless batch N−1 is final (§6.5).
+The intent is a container of kind `disposal-batch`, written before any record is destroyed. Creating it is how a run claims its sequence: a run MUST create `N.intent.slpc` exclusively, and MUST NOT proceed if the create fails. A run MUST NOT claim sequence N unless batch N−1 is final (§6.7).
 
 ```toml
 slipcase_version = "1.1"

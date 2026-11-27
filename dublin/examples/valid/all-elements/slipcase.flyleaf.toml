@@ -1,0 +1,24 @@
+slipcase_version = "1.1"
+
+[content]
+file = "survey-report.txt"
+
+[dublin]
+profile = "https://slipcaseformat.org/profiles/dublin"
+profile_version = "1.0"
+kind = "resource"
+title = ["Survey of the North Field"]
+creator = ["A. Marsh", "Field Office 3"]
+subject = ["drainage", "soil survey"]
+description = ["Findings of the spring drainage survey of the north field."]
+publisher = ["Field Office 3"]
+contributor = ["B. Okafor"]
+date = ["2024-05-02", "spring 2024"]
+type = ["report"]
+format = ["text/plain", "1 page"]
+identifier = ["FO3-2024-017"]
+source = ["Field notebook 12"]
+language = ["en"]
+relation = ["Survey of the South Field"]
+coverage = ["North Field, Parcel 7", "2024"]
+rights = ["Copyright 2024 Field Office 3. All rights reserved."]

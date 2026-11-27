@@ -1,0 +1,16 @@
+slipcase_version = "1.1"
+
+[content]
+file = "survey-report.txt"
+
+[dublin]
+profile = "https://slipcaseformat.org/profiles/dublin"
+profile_version = "1.0"
+kind = "resource"
+title = ["Survey of the North Field"]
+
+[handover]
+profile = "https://slipcaseformat.org/profiles/handover"
+profile_version = "1.0"
+kind = "document"
+id = "01928000-0000-7000-8000-000000000001"

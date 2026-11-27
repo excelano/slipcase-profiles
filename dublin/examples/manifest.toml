@@ -1,0 +1,76 @@
+# Every example under valid/ and invalid/, with the verdict an implementation of
+# Dublin Profile 1.0 reaches and the section whose rule decides it. Each case
+# is a directory in container form: pack it with the flyleaf and every member.
+# Not normative: where a case and SPEC.md disagree, the specification wins.
+
+[[case]]
+name = "minimal"
+verdict = "conformant"
+rule = "2.2"
+note = "The three framework keys and no element: every element is optional."
+
+[[case]]
+name = "example"
+verdict = "conformant"
+rule = "2.1"
+note = "The example in the specification."
+
+[[case]]
+name = "all-elements"
+verdict = "conformant"
+rule = "2.2"
+note = "All fifteen elements, some with several items, a date naming a period."
+
+[[case]]
+name = "unknown-key"
+verdict = "conformant"
+rule = "2.4"
+note = "A key this version does not define, which an implementation preserves."
+
+[[case]]
+name = "second-profile"
+verdict = "conformant"
+rule = "FRAMEWORK 3"
+note = "Also carries a hypothetical handover profile; a Dublin implementation reads only its own table."
+
+[[case]]
+name = "bare-string"
+verdict = "non-conformant"
+rule = "2.3"
+note = "title is a string, not an array of strings."
+
+[[case]]
+name = "empty-array"
+verdict = "non-conformant"
+rule = "2.3"
+note = "creator is present with no items."
+
+[[case]]
+name = "empty-string"
+verdict = "non-conformant"
+rule = "2.3"
+note = "An item of subject is the empty string."
+
+[[case]]
+name = "date-is-toml-date"
+verdict = "non-conformant"
+rule = "2.3"
+note = "An item of date is a TOML date; every item is a string."
+
+[[case]]
+name = "item-is-table"
+verdict = "non-conformant"
+rule = "2.3"
+note = "An item of creator is a table; the profile defines no sub-keys."
+
+[[case]]
+name = "kind-unknown"
+verdict = "non-conformant"
+rule = "FRAMEWORK 5"
+note = "A kind this version does not define."
+
+[[case]]
+name = "profile-uri-wrong"
+verdict = "non-conformant"
+rule = "FRAMEWORK 3"
+note = "The table is named dublin but its profile names another specification."

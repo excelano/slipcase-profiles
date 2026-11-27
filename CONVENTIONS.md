@@ -1,7 +1,7 @@
 # Slipcase Profiles — Shared Conventions
 
 **Version:** 1.0  
-**Status:** draft  
+**Status:** final  
 **Framework version:** 1.0
 
 Things that every profile needs and that would otherwise be defined slightly differently by each: how to write an identifier, an agent, a hash, a date, and a log that cannot be edited without the edit showing. A profile states which of these it uses (FRAMEWORK §8) and defines none of them itself.

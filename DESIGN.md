@@ -1,6 +1,5 @@
 # Slipcase Profiles — Design Document
 
-**Status:** design draft.  
 **Covers:** Framework 1.0, Shared Conventions 1.0
 
 `FRAMEWORK.md` and `CONVENTIONS.md` state the rules. This document says why each one is drawn where it is, and what was considered and rejected. Nothing here is normative: where this document and either of those disagree, they win and this document is wrong.

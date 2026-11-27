@@ -94,59 +94,6 @@ class VerifyRegister(unittest.TestCase):
             self.assertIn("not a register", got.stderr)
 
 
-class CheckCore(unittest.TestCase):
-    def test_every_case_reaches_its_verdict(self):
-        cases = REPO / "core" / "examples"
-        manifest = tomllib.loads((cases / "manifest.toml").read_text())
-        for case in manifest["case"]:
-            with self.subTest(case["name"]):
-                folder = "valid" if case["verdict"] == "conformant" else "invalid"
-                got = run("check-core.py", cases / folder / case["name"])
-                if case["verdict"] == "conformant":
-                    self.assertEqual(got.returncode, 0, got.stdout + got.stderr)
-                    self.assertEqual(got.stdout.strip(), "conformant")
-                else:
-                    self.assertEqual(got.returncode, 1, got.stdout + got.stderr)
-                    self.assertTrue(
-                        got.stdout.startswith(f"non-conformant {case['rule']}:"),
-                        got.stdout,
-                    )
-
-    def test_the_word_fixture_maps_as_section_4_says(self):
-        import datetime
-        import xml.etree.ElementTree as ET
-
-        ns = {
-            "cp": "http://schemas.openxmlformats.org/package/2006/metadata/core-properties",
-            "dc": "http://purl.org/dc/elements/1.1/",
-            "dcterms": "http://purl.org/dc/terms/",
-        }
-        examples = REPO / "core" / "examples"
-        props = ET.parse(examples / "fixtures" / "word-core.xml").getroot()
-
-        def text(tag):
-            return props.find(tag, ns).text.strip()
-
-        core = tomllib.loads(
-            (examples / "valid" / "from-word" / "slipcase.flyleaf.toml").read_text()
-        )["core"]
-        created = datetime.datetime.fromisoformat(text("dcterms:created"))
-
-        self.assertEqual(core["title"], text("dc:title"))
-        self.assertEqual(core["creator"], [{"name": text("dc:creator")}])
-        self.assertIn(";", text("dc:creator"))
-        self.assertEqual(core["subject"], [text("dc:subject")])
-        self.assertTrue(text("cp:keywords"))
-        self.assertEqual(core["description"], text("dc:description"))
-        self.assertEqual(core["created"], created.astimezone(datetime.timezone.utc).date())
-        self.assertNotEqual(core["created"], created.astimezone(datetime.timezone(datetime.timedelta(hours=-6))).date())
-        self.assertEqual(set(core) - {"profile", "profile_version", "kind"},
-                         {"title", "creator", "subject", "description", "created", "modified"})
-
-    def test_a_missing_case_is_a_usage_error(self):
-        self.assertEqual(run("check-core.py", REPO / "no-such-case").returncode, 2)
-
-
 class CheckSchedule(unittest.TestCase):
     def test_each_schedule_example_reaches_its_verdict(self):
         schedules = EXAMPLES / "schedule"

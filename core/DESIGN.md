@@ -38,17 +38,17 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 **A closed type list, an open language registry (CORE §3.5, §3.7).** DCMI's Type Vocabulary has twelve terms and changes rarely, so `type` is closed and a misspelling is caught. BCP 47 tags are checked for form only: the subtag registry grows, and a checker that consulted it would need the network and would fail on a tag registered last month.
 
-## 5. Filling from a source
+## 5. A statement, and filling from a source
 
-**The mapping is normative for whoever fills the table (CORE §4).** The value of a shared vocabulary is that two tools describe the same file the same way. Left to each implementation, the same Word document would come out with Keywords as one subject or four, an author split or whole, a creation time in one zone or another. A person typing a table is free; a program reading a source follows the table.
+**The table is authoritative (CORE §2.3).** A container's description is written deliberately, and it can be more right than the file it describes: an archive can correct a wrong author or a garbled title without rewriting the original, which is the reason for keeping a description beside a file instead of inside it. So where the two disagree, the table is what this profile reads, and no tool overwrites it from the file unless a person asks.
 
-**Each source's traps are named.** OpenDocument's `dc:creator` is whoever last saved the file, and its author is `meta:initial-creator`; reading the obvious field gets the wrong person. PDF's `/Creator` is the application, not the author. A PDF's `/Subject` goes to `description` because that is where XMP places it, so a PDF's two sources agree when they are combined; Office's Subject is a topic and goes to `subject`. These are where implementations would diverge, and each has a row of its own.
+**Only Dublin Core fills it (CORE §4.1).** The rule is literal: a Dublin Core element a file carries fills the key of the same name, and nothing else does. Files carry a great deal of other metadata that resembles Dublin Core (Office's keywords, OpenDocument's author field, a PDF's document information, a camera's EXIF, a music file's ID3 tags), and mapping any of it would be a judgment that one vocabulary's field means a Dublin Core term. Those judgments are arguable, and making them here would give terms meanings DCMI does not give them. Each of those vocabularies can have a profile of its own, built on its own standard, where its fields keep their own meaning.
 
-**XMP wins key by key (CORE §4.4).** ISO 32000-2 deprecates the document information dictionary's entries, apart from its two dates, in favor of XMP, so XMP takes precedence. But many PDFs carry an XMP packet with a title and nothing else beside a dictionary with an author, and replacing the dictionary wholesale would throw the author away. Key by key keeps everything either source states and still gives one answer.
+**One exception, by name.** OpenDocument writes `dc:creator` for whoever last saved the file, which is not what the term means, so that one element is excluded rather than read literally.
 
-**`xmpRights:WebStatement` maps to `license` whenever it is an absolute URI.** The property names a web page about the resource's rights, which is often a license and not always. Telling the two apart would need a list of license URIs or a judgment, and two tools would draw the line differently; mapping every URI is the rule two tools can agree on, at the cost of an occasional rights page filed as a license.
+**Filling adds, it does not replace.** A tool fills only keys that are absent, so a description someone corrected is never undone by reading the file again.
 
-**Values that would not conform map to nothing, as do fields the table does not list.** A file can say its language is `English` or its format `PDF`, and a source can carry Dublin Core properties CORE §4 does not map. A tool that wrote the first would produce a non-conforming table, and tools choosing differently about the second would write different tables, so both are dropped.
+**Values that would not conform map to nothing.** A file can carry `dc:language` as `English` or `dc:type` as `Document`. Writing either would produce a non-conforming table, and tools choosing differently would write different tables, so both are dropped.
 
 **Partial dates map to nothing.** A source date of `2024` or `2024-03` cannot become a TOML local date without inventing a day, and an invented first of January would read as a fact.
 
@@ -60,4 +60,4 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 ## 7. Why a draft
 
-The mapping table is the part most likely to meet a file it did not anticipate, and no implementation has run it yet. The profile stays a draft, with changes landing without moving its number, until a tool fills tables from real files and the table has met them.
+The filling rules are the part most likely to meet a file they did not anticipate, and no implementation has run them yet. The profile stays a draft, with changes landing without moving its number, until a tool fills tables from real files and the table has met them.

@@ -23,7 +23,7 @@ The key words **MUST**, **MUST NOT**, and **MAY** are to be interpreted as descr
 
 **DCMI term** — a property of the DCMI Metadata Terms, identified by a URI of the form `http://purl.org/dc/terms/<name>`. Each key in §2.2 names the term it is, and DCMI's definition is the authority on what the term means. The definitions below are summaries for a reader of this document.
 
-**Source** — metadata a content file already carries in its own format: Office document properties, OpenDocument metadata, a PDF's document information or an XMP packet (§4).
+**Source** — Dublin Core metadata a content file already carries in its own format (§4).
 
 ## 2. The core table
 
@@ -90,6 +90,10 @@ email = "jdoe@gulfgeo.example"
 
 Key names are DCMI's own, case included, so that `rightsHolder` here is `rightsHolder` in every DCMI serialization. Keys this section does not define are permitted in the table and MUST be preserved (FRAMEWORK §3). A later version of this profile may add DCMI terms; it never adds a key that is not one.
 
+### 2.3 A statement about the resource
+
+The `[core]` table is a statement about the resource made by whoever wrote the container. Where it disagrees with metadata the content file carries, the table is what this profile reads: it may correct a file's own metadata without the file being rewritten. An implementation MUST NOT replace a value in the table with one taken from the content file except at a person's request.
+
 ## 3. Value forms
 
 ### 3.1 Attribution
@@ -136,86 +140,31 @@ Attribution names whoever the resource credits, inside the organization that wro
 
 ## 4. Filling from a source
 
-An implementation that fills `[core]` from metadata the content file already carries MUST map it as this section states, so that two implementations reading the same file write the same table. An implementation MAY fill some keys and not others; a key it fills, it fills this way. A person writing the table by hand is not bound by this section.
+Many files already carry Dublin Core: an Office document's core properties, an OpenDocument file's metadata, the XMP packet in a PDF or an image. An implementation that fills `[core]` from Dublin Core a content file carries MUST fill it as this section states, so that two implementations reading the same file write the same table. It fills only keys that are absent; a key already present is replaced only at a person's request (§2.3). A person writing the table by hand is not bound by this section.
 
-### 4.1 Office Open XML
+### 4.1 Which elements
 
-The core properties part (`docProps/core.xml` in a Word, Excel, or PowerPoint file):
+An element in the Dublin Core elements namespace (`http://purl.org/dc/elements/1.1/`) or the DCMI terms namespace (`http://purl.org/dc/terms/`) whose local name is a key in §2.2 fills that key: `dc:title` fills `title`, `dcterms:created` fills `created`. Nothing else in a file fills `[core]`: an element in any other namespace maps to nothing, whatever it means, and so does a Dublin Core element whose local name §2.2 does not define.
 
-| Source | Key | |
-|---|---|---|
-| `dc:title` | `title` | |
-| `dc:subject` | `subject` | First entry. Office's Subject field is a topic phrase. |
-| `cp:keywords` | `subject` | Further entries: the value split on `;` and `,`, each part trimmed, empty parts dropped. |
-| `dc:creator` | `creator` | One attribution table (§4.5). |
-| `dc:description` | `description` | |
-| `dc:language` | `language` | One entry. |
-| `dc:identifier` | `identifier` | One entry. |
-| `dcterms:created` | `created` | §4.5 for an instant. |
-| `dcterms:modified` | `modified` | §4.5 for an instant. |
+One element is excluded by name. OpenDocument defines its `dc:creator` as the person who last modified the file, not the author, so an OpenDocument `dc:creator` maps to nothing.
 
-`cp:lastModifiedBy`, `cp:revision`, `cp:category`, `cp:contentStatus`, `cp:lastPrinted`, and `cp:version` are not Dublin Core and map to nothing.
+### 4.2 Where to read
 
-### 4.2 OpenDocument
+A format's primary metadata is read: `docProps/core.xml` in an Office Open XML file, `meta.xml` in an OpenDocument file, the document's metadata stream in a PDF, the XMP packet in an image. Where a file carries Dublin Core in more than one place, only the primary metadata is read.
 
-The metadata of an OpenDocument file (`meta.xml`):
+### 4.3 Values
 
-| Source | Key | |
-|---|---|---|
-| `dc:title` | `title` | |
-| `dc:description` | `description` | |
-| `dc:subject` | `subject` | First entry. |
-| `meta:keyword` | `subject` | Further entries, one per element, in document order. |
-| `meta:initial-creator` | `creator` | One attribution table (§4.5). |
-| `meta:creation-date` | `created` | §4.5 for an instant. |
-| `dc:date` | `modified` | §4.5 for an instant. |
-| `dc:language` | `language` | One entry. |
+- A text element fills a single-text key with its value, or adds one entry to a repeatable-text key.
+- An XMP language alternative contributes its `x-default` item, or its first item where there is none; an XMP sequence or bag contributes one entry per item, in order.
+- A `creator`, `contributor`, `publisher`, or `rightsHolder` value becomes one attribution table whose `name` is the value, whatever separators it contains: `Doe, J.; Roe, R.` is one name. A source never yields an `email`, `uri`, `orcid`, or `lei` the file does not state as one.
+- A date element holding a full date fills the date key with it. One holding a date and time fills it with the date in UTC, a time that states no offset being read as UTC. One giving only a year, or a year and month, maps to nothing.
+- `type` is filled only by a value that is one of the twelve terms of §3.5.
 
-OpenDocument's `dc:creator` names whoever last modified the file, not its author, and maps to nothing; `meta:initial-creator` is the author. `meta:generator` maps to nothing.
-
-### 4.3 PDF document information
-
-The document information dictionary of a PDF:
-
-| Source | Key | |
-|---|---|---|
-| `/Title` | `title` | |
-| `/Author` | `creator` | One attribution table (§4.5). |
-| `/Subject` | `description` | Where XMP places it (`dc:description`), so §4.3 and §4.4 agree when combined. |
-| `/Keywords` | `subject` | The value split on `;` and `,`, each part trimmed, empty parts dropped. |
-| `/CreationDate` | `created` | §4.5 for an instant. |
-| `/ModDate` | `modified` | §4.5 for an instant. |
-
-`/Creator` names the application that made the original document and `/Producer` the one that wrote the PDF; neither maps.
-
-### 4.4 XMP
-
-An XMP packet: a PDF's metadata stream, or the metadata embedded in an image.
-
-| Source | Key | |
-|---|---|---|
-| `dc:title` | `title` | The `x-default` alternative, else the first. |
-| `dc:creator` | `creator` | One attribution table per sequence item, in order. |
-| `dc:description` | `description` | The `x-default` alternative, else the first. |
-| `dc:subject` | `subject` | One entry per bag item. |
-| `dc:rights` | `rights` | One entry: the `x-default` alternative, else the first. |
-| `dc:format` | `format` | |
-| `dc:language` | `language` | One entry per bag item. |
-| `xmp:CreateDate` | `created` | §4.5 for an instant. |
-| `xmp:ModifyDate` | `modified` | §4.5 for an instant. |
-| `xmpRights:WebStatement` | `license` | One entry, when the value is an absolute URI. |
-
-Where a PDF carries both an XMP packet and a document information dictionary, they are combined key by key: each key takes the XMP value where XMP yields one, and the dictionary's where it does not.
-
-### 4.5 Rules for every source
+### 4.4 Rules for every value
 
 - A value is trimmed of leading and trailing whitespace. A value that is then empty maps to nothing, and a key with nothing mapped to it is left absent, never written as an empty string or an empty array.
-- An author string becomes one attribution table whose `name` is the string, whatever separators it contains: `Doe, J.; Roe, R.` is one name. Only the keyword fields of §4.1 and §4.3 are split. A source never yields an `email`, `uri`, `orcid`, or `lei` the file does not state as one.
-- An instant becomes its date in UTC. A timestamp that states no offset is read as UTC. A date that gives only a year or a year and month maps to nothing, since a date key holds a whole day.
-- Subject entries keep their first occurrence and drop later exact duplicates.
-- A source field this section does not list maps to nothing, even where its name matches a key.
-- A value that would not satisfy §5 for its key maps to nothing; the rest of the source is still mapped.
-- `format`, where the source does not state it, is the content file's media type as the implementation determines it, or absent.
+- A value that would not satisfy §5 for its key maps to nothing; the rest of the file is still read.
+- A repeatable key keeps the first occurrence of a value and drops later exact duplicates.
 
 ## 5. Conformance
 
@@ -238,6 +187,7 @@ Beyond FRAMEWORK §11, an implementation of this profile:
 
 - MUST preserve keys in `[core]` it does not recognize, and the order of entries in every array it does not change;
 - MUST NOT write an empty string, an empty array, or an attribution table without a `name`;
+- MUST NOT replace a value in the table with one taken from the content file except at a person's request (§2.3);
 - MUST, when it fills the table from a source, follow §4.
 
 ## 7. Security considerations

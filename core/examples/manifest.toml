@@ -109,7 +109,7 @@ note = "A license that is a phrase, not a URI; free text belongs in rights."
 name = "from-word"
 verdict = "conformant"
 rule = "4.1"
-note = "Filled from fixtures/word-core.xml as §4.1 and §4.5 say: Subject then the split Keywords, the author string kept whole, created as its UTC date, lastModifiedBy and revision dropped."
+note = "Filled from fixtures/word-core.xml as §4 says: only Dublin Core elements, so cp:keywords, lastModifiedBy and revision are dropped; the author string kept whole; created as its UTC date."
 
 [[case]]
 name = "type-is-array"

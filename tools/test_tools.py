@@ -135,8 +135,8 @@ class CheckCore(unittest.TestCase):
         self.assertEqual(core["title"], text("dc:title"))
         self.assertEqual(core["creator"], [{"name": text("dc:creator")}])
         self.assertIn(";", text("dc:creator"))
-        keywords = [k.strip() for k in re.split("[;,]", text("cp:keywords")) if k.strip()]
-        self.assertEqual(core["subject"], [text("dc:subject"), *keywords])
+        self.assertEqual(core["subject"], [text("dc:subject")])
+        self.assertTrue(text("cp:keywords"))
         self.assertEqual(core["description"], text("dc:description"))
         self.assertEqual(core["created"], created.astimezone(datetime.timezone.utc).date())
         self.assertNotEqual(core["created"], created.astimezone(datetime.timezone(datetime.timedelta(hours=-6))).date())

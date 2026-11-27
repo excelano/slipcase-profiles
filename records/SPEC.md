@@ -1,7 +1,7 @@
 # Slipcase Records Profile — Specification
 
 **Version:** 1.0  
-**Status:** final  
+**Status:** draft  
 **Framework:** 1.0 · **Conventions:** 1.0 · **Slipcase:** 1.1
 
 The Records Profile makes a Slipcase container a managed record: a thing with an identity, a custodian, a retention schedule, holds that can stop its destruction, a history that cannot be edited without the edit showing, and, at the end, a place in a register that says it was destroyed and how. It also defines the containers a records-management system keeps beside its records: hold matters, aggregations, and disposal batches.

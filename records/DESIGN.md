@@ -1,6 +1,6 @@
 # Slipcase Records Profile — Design Document
 
-**Specification version:** 1.0
+**Specification version:** 1.0 (draft)
 
 `SPEC.md` states the rules. This document says why each one is drawn where it is, and what was considered and rejected. Nothing here is normative. This profile's rules are cited as **RECORDS §2.4**; the framework, the conventions, and the Slipcase specification as **FRAMEWORK §n**, **CONVENTIONS §n**, and **SPEC §n**, as they are everywhere else in this repository.
 

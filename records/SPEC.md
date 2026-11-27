@@ -19,7 +19,7 @@ The key words **MUST**, **MUST NOT**, **SHOULD**, and **MAY** are to be interpre
 | Profile table | `[records]` |
 | Profile prefix | `records/` |
 | Kinds | `record`, `hold`, `aggregation`, `disposal-batch` |
-| Conventions used | identifiers, agents, hashes, dates and instants, chained logs |
+| Conventions used | identifiers, hashes, dates and instants, chained logs |
 
 **Record** — a container of kind `record`.  
 **Records root** — the directory holding a records-management system's central state: its schedule, register, hold matters, and aggregations (§7).  
@@ -27,6 +27,19 @@ The key words **MUST**, **MUST NOT**, **SHOULD**, and **MAY** are to be interpre
 **Unclassified** — a container carrying no `[records]` table, or one whose `kind` is not `record`, considered as a candidate record. An unclassified container is not a record and nothing in this profile acts on it.
 
 A container that Slipcase calls undetermined is never passed over silently where records are expected: an undetermined container can hide a record (§9).
+
+### 1.1 Agents
+
+An **agent** is a person, or a system acting on a person's authority, in the organization's directory: someone the organization can hold accountable for something done to a record or for the record itself. It is written as a table with two keys, both required:
+
+```toml
+actor = { email = "rm@example.com", id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b" }
+```
+
+- **`email`** — string. The address external systems match on.
+- **`id`** — string, non-empty. A stable identifier from the organization's directory, which survives a change of name or address. Its form is the directory's.
+
+Two agents are the same when their `id` values are equal. `email` is for people reading and for systems that have nothing else.
 
 ## 2. Records
 
@@ -53,7 +66,7 @@ essential = false
 marking = "Confidential"
 events_head = "9140413d6cd39affadb3669cb7b09cf05ca2a4cd12f3129049e7736d694f5d8a"
 
-[records.creator]
+[records.captured_by]
 email = "jdoe@example.com"
 id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
 
@@ -88,7 +101,7 @@ title = "Vendor contract C-4471"
 
 ### 2.2 Keys
 
-A record's `[records]` table MUST contain the three framework keys (FRAMEWORK §3) and the following. Types are TOML types; **identifier**, **agent**, **hash**, **date**, and **instant** are CONVENTIONS §1 to §4.
+A record's `[records]` table MUST contain the three framework keys (FRAMEWORK §3) and the following. Types are TOML types; **identifier**, **hash**, **date**, and **instant** are CONVENTIONS §1 to §3, and **agent** is §1.1.
 
 | Key | Type | |
 |---|---|---|
@@ -99,7 +112,7 @@ A record's `[records]` table MUST contain the three framework keys (FRAMEWORK §
 | `size` | integer | The content file's length in bytes, determined at capture. |
 | `essential` | boolean | Whether the record is one the organization has designated essential (vital) for continuity. Informational in this version. |
 | `events_head` | hash | The head of the event log (§2.8). |
-| `creator` | agent | Who created the content. Fixed at capture. |
+| `captured_by` | agent | Who brought the container under management as a record. Fixed at capture. Who made the content is not this profile's to say. |
 | `custodian` | agent | Who is responsible for the record now. Changes over time, and is what holds are matched against. |
 | `fixity` | table | §2.3. |
 | `series` | array of tables | §2.4. MAY be empty: a record with no series is captured and unclassified as to retention. |
@@ -122,7 +135,7 @@ Keys this section does not define are permitted in the table and MUST be preserv
 content_sha256 = "51ab..."
 ```
 
-`content_sha256` is a hash (CONVENTIONS §3) of the content file, taken at capture and whenever the content file is replaced (§2.9). An implementation verifying fixity compares it with the content file's bytes as read; a difference means the content has changed since it was last written under this profile, and §9 says what an implementation does about that.
+`content_sha256` is a hash (CONVENTIONS §2) of the content file, taken at capture and whenever the content file is replaced (§2.9). An implementation verifying fixity compares it with the content file's bytes as read; a difference means the content has changed since it was last written under this profile, and §9 says what an implementation does about that.
 
 ### 2.4 Series
 
@@ -211,7 +224,7 @@ Components are destroyed with their container, and a component is never shared b
 
 ### 2.8 The event log
 
-Every record carries its own history as a chained log (CONVENTIONS §5):
+Every record carries its own history as a chained log (CONVENTIONS §4):
 
 | | |
 |---|---|
@@ -224,7 +237,7 @@ A record MUST carry the log, the log MUST be intact, and `events_head` MUST equa
 
 Every change to the `[records]` table appends an entry describing it, and the two are written in one operation: a rewrite of the container that changes the table and appends the entry, so that a change and its record can never be separated. `events_head` is updated in that same operation.
 
-Each entry carries the keys CONVENTIONS §5.1 requires and:
+Each entry carries the keys CONVENTIONS §4.1 requires and:
 
 | Key | Type | |
 |---|---|---|
@@ -599,7 +612,7 @@ Deletion is an ordinary filesystem delete. Nothing is overwritten, and nothing w
 
 ### 6.5 The journal
 
-`N.journal` is a chained log (CONVENTIONS §5) beside the containers, entry name `outcome`, seeded from the UTF-8 bytes of the intent flyleaf's hash (the `intent_flyleaf_sha256` the final will carry). Each entry carries `seq`, `at`, `prev`, and:
+`N.journal` is a chained log (CONVENTIONS §4) beside the containers, entry name `outcome`, seeded from the UTF-8 bytes of the intent flyleaf's hash (the `intent_flyleaf_sha256` the final will carry). Each entry carries `seq`, `at`, `prev`, and:
 
 | Key | |
 |---|---|
@@ -651,7 +664,7 @@ In addition to the intent's keys: `completed` (instant), `records_destroyed` (in
 | `manifest_sha256` | The final manifest. |
 | `journal_sha256` | The journal file, or, for a batch recovered before any outcome was journaled, the empty byte string. |
 
-Every hash is over stored bytes (CONVENTIONS §3). A register's chain is **intact** when, walking from batch 1, every final's five hashes are what they should be, every sequence from 1 to the last is present, no sequence is claimed twice, and every final's intent exists and matches. Verification reports the first batch at which any of this fails, and every unfinished intent; it never repairs.
+Every hash is over stored bytes (CONVENTIONS §2). A register's chain is **intact** when, walking from batch 1, every final's five hashes are what they should be, every sequence from 1 to the last is present, no sequence is claimed twice, and every final's intent exists and matches. Verification reports the first batch at which any of this fails, and every unfinished intent; it never repairs.
 
 **The register records what happened, never what was planned.** A certificate never claims a destruction that did not occur, and a final is never written until every planned record has an outcome.
 

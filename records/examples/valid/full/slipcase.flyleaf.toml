@@ -16,7 +16,7 @@ essential = false
 marking = "Confidential"
 events_head = "0c5e40af645c1a5a754a80e581ef7f8698ef5f8d700352970c8df1935c03c4ad"
 
-[records.creator]
+[records.captured_by]
 email = "jdoe@example.com"
 id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Verify a chained log against CONVENTIONS §5: delimit entries by header line,
+# Verify a chained log against CONVENTIONS §4: delimit entries by header line,
 # hash their stored bytes, and check seq and prev.
 #
 # Usage: verify-log.py <log-file> <entry-name> <seed-string> [expected-head]
@@ -15,11 +15,11 @@ import tomllib
 def entries_of(data: bytes, name: str) -> list[bytes]:
     header = f"[[{name}]]\n".encode()
     if b"\r" in data:
-        raise SystemExit("the file contains CR (CONVENTIONS 5.2)")
+        raise SystemExit("the file contains CR (CONVENTIONS 4.2)")
     if not data.startswith(header):
-        raise SystemExit("the file does not begin with a header line (CONVENTIONS 5.2)")
+        raise SystemExit("the file does not begin with a header line (CONVENTIONS 4.2)")
     if not data.endswith(b"\n"):
-        raise SystemExit("the file does not end with LF (CONVENTIONS 5.2)")
+        raise SystemExit("the file does not end with LF (CONVENTIONS 4.2)")
     starts = [0]
     at = 0
     while True:
@@ -48,7 +48,7 @@ def main() -> None:
             raise SystemExit(f"broken at entry {n}: prev does not hash the previous entry")
         expected = hashlib.sha256(raw).hexdigest()
     if head is not None and expected != head:
-        raise SystemExit("the last entry does not hash to the recorded head (CONVENTIONS 5.5)")
+        raise SystemExit("the last entry does not hash to the recorded head (CONVENTIONS 4.5)")
     print(f"intact: {len(chunks)} entries, head {expected}")
 
 

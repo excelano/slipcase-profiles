@@ -66,7 +66,7 @@ note = "created must be a date; a date-time is not one."
 [[case]]
 name = "captured-is-local"
 verdict = "non-conformant"
-rule = "CONVENTIONS 4"
+rule = "CONVENTIONS 3"
 note = "captured names no zone."
 
 [[case]]
@@ -78,7 +78,7 @@ note = "size must be an integer."
 [[case]]
 name = "agent-without-id"
 verdict = "non-conformant"
-rule = "CONVENTIONS 2"
+rule = "1.1"
 note = "An agent needs email and id."
 
 [[case]]
@@ -150,7 +150,7 @@ note = "The first entry is not captured."
 [[case]]
 name = "events-chain-broken"
 verdict = "non-conformant"
-rule = "CONVENTIONS 5.3"
+rule = "CONVENTIONS 4.3"
 note = "The second entry's prev does not hash the first entry's bytes."
 
 [[case]]
@@ -168,7 +168,7 @@ note = "An event type outside the table."
 [[case]]
 name = "events-crlf"
 verdict = "non-conformant"
-rule = "CONVENTIONS 5.2"
+rule = "CONVENTIONS 4.2"
 note = "The log was rewritten with CRLF line endings."
 
 [[case]]

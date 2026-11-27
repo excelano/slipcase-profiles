@@ -15,7 +15,7 @@ size = 53
 essential = false
 events_head = "5ef7f6dc1a3b9738fe6d1ee0d46d195cfb9ac38d10520a7b5562c7cd6b53776f"
 
-[records.creator]
+[records.captured_by]
 email = "jdoe@example.com"
 id = "8f1c2b9e-1d4a-4e5f-9a0b-6c7d8e9f0a1b"
 

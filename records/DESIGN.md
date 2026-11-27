@@ -22,9 +22,9 @@ The rejected alternative was a content hash as identity. A record's content can 
 
 ## 3. Two agents, and why both parts of each
 
-**Creator and custodian are separate (RECORDS §2.2)** because they answer different questions: who made it, and who is responsible for it now. A legal hold on a departed employee's records is matched on custodian, and custodian changes when the person leaves. Creator never changes.
+**Who captured it and who keeps it, not who wrote it (RECORDS §2.2).** A record names two agents: `captured_by`, who in the organization brought it under management, and `custodian`, who is responsible for it now. Both are accountability, and both are people the organization can find in its own directory. Who made the document is a different kind of fact: an invoice was made by a vendor, a report by a consultant, and neither is in the directory or answerable for the record. That is description, and a container that needs it carries a description profile beside this one. A records profile that named the author as an agent would have to put a member of staff where the vendor belongs, and the key would then mean something other than its name. A legal hold on a departed employee's records is matched on custodian, which changes when the person leaves; `captured_by` never changes.
 
-**Email plus directory identifier** is CONVENTIONS §2 and the reasoning is there. The records-specific point is that holds arrive from outside (a legal platform names custodians by email) and renumbering of the organization's directory arrives from inside, and the two halves of an agent survive each other's failure.
+**Agents are defined here (RECORDS §1.1)**, not among the shared conventions, because an accountable person in the organization's directory is a records-management concept; FRAMEWORK's design says when such a form would move into the conventions. Email is what external systems (a legal hold platform, a mail server) match on, and a stable directory identifier is what survives a person changing their name or address. Neither alone is enough: email changes, and a directory ID means nothing to a system outside the directory. Both are required, so that a record does not end up with one agent written one way and the next another, and the two halves survive each other's failure: holds arrive from outside naming custodians by email, and changes to the directory arrive from inside.
 
 ## 4. Series as a list, with a snapshot
 
@@ -52,11 +52,11 @@ The rejected alternative was a content hash as identity. A record's content can 
 
 ## 7. The event log
 
-The log's mechanics are CONVENTIONS §5 and the reasoning for them is in the top-level design document. The records-specific decisions:
+The log's mechanics are CONVENTIONS §4 and the reasoning for them is in the top-level design document. The records-specific decisions:
 
 **Inside the container.** The alternative, a central log, is a database, and it is the database that fails the moment a record leaves the system. A log inside the container goes where the record goes. The cost is that a log cannot be read across records without opening each container, and that cost is accepted: a central index of events is a cache, like every other index here.
 
-**The head is in the flyleaf (RECORDS §2.8).** CONVENTIONS §5.5 requires a profile to put the head somewhere the log cannot reach. The flyleaf is rewritten in the same operation as every append, so it costs nothing to put it there, and the flyleaf is what the disposal plan hashes (RECORDS §6), so at the moment that matters most the head is covered by the register.
+**The head is in the flyleaf (RECORDS §2.8).** CONVENTIONS §4.5 requires a profile to put the head somewhere the log cannot reach. The flyleaf is rewritten in the same operation as every append, so it costs nothing to put it there, and the flyleaf is what the disposal plan hashes (RECORDS §6), so at the moment that matters most the head is covered by the register.
 
 **One operation for the change and its entry.** A change to the table and the entry recording it are written in one rewrite of the container, so that there is no state in which one exists without the other. A crash between two separate writes would leave either an unlogged change or a logged change that did not happen, and both are the record lying about itself.
 
@@ -148,9 +148,9 @@ Format identification beyond a media type (PRONOM); the key is reserved so that 
 
 **The final is also exclusive-created**, so that recovery racing a run that was alive after all, or two recoveries, produce one final and one failure rather than two finals.
 
-**The chain is over stored bytes of members, not over containers**, for the reason CONVENTIONS §3 gives: repacking changes bytes. Every register container is written once and never repacked, and the rule that nothing reserializes a register flyleaf is what keeps that true.
+**The chain is over stored bytes of members, not over containers**, for the reason CONVENTIONS §2 gives: repacking changes bytes. Every register container is written once and never repacked, and the rule that nothing reserializes a register flyleaf is what keeps that true.
 
-**The journal is hashed whole rather than by head.** It is complete when the final is written, so a whole-file hash covers it entirely, and verification of a final then needs no knowledge of the journal's structure. CONVENTIONS §5.5 was widened to allow this once the register showed the case.
+**The journal is hashed whole rather than by head.** It is complete when the final is written, so a whole-file hash covers it entirely, and verification of a final then needs no knowledge of the journal's structure. CONVENTIONS §4.5 was widened to allow this once the register showed the case.
 
 **The genesis value is a fixed string's hash**, published in the specification, rather than something per organization. A per-organization value would be one more thing to keep and to lose, and the first batch's `previous_flyleaf_sha256` has nothing to say except "there is no previous batch".
 

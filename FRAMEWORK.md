@@ -83,7 +83,7 @@ A later version of this framework may let a profile declare that it requires ano
 
 ## 8. Shared conventions
 
-Identifiers, agents, hashes, dates and instants, and chained logs are defined once, in `CONVENTIONS.md`, and are versioned with this framework. A profile MUST state which conventions it uses and MUST NOT define its own form for anything a convention defines. A profile MAY leave a convention unused.
+Identifiers, hashes, dates and instants, and chained logs are defined once, in `CONVENTIONS.md`, and are versioned with this framework. A profile MUST state which conventions it uses and MUST NOT define its own form for anything a convention defines. A profile MAY leave a convention unused.
 
 ## 9. Official profiles
 
@@ -110,7 +110,7 @@ A profile's specification MUST state:
 
 1. its name, `profile` URI, table name, prefix, and version, and the versions of this framework and of Slipcase it is written against;
 2. its kinds, and for each kind the keys the table MUST and MAY contain, with each key's type, and the members the container MUST and MAY carry under the prefix;
-3. which shared conventions it uses, and for any chained log it defines, the entry name and the seed (CONVENTIONS §5);
+3. which shared conventions it uses, and for any chained log it defines, the entry name and the seed (CONVENTIONS §4);
 4. the properties a container must have to conform to the profile, stated so that each can be checked against the file;
 5. the requirements it places on an implementation beyond those of this framework;
 6. its security considerations.
@@ -142,7 +142,7 @@ This appendix exists to show that the framework is general: a profile unrelated 
 
 Kinds: `document` (one delivered document; the content file is the document) and `manifest` (the delivery itself; the content file is the transmittal, and `handover/manifest.csv` lists every document delivered with its identifier and content hash).
 
-A `document` table carries `id` (an identifier, CONVENTIONS §1), `delivery` (the identifier of the manifest it was delivered under), `document_number` and `revision` (strings, the owner's numbering), `fixity.content_sha256` (CONVENTIONS §3), and `issued` (a date, CONVENTIONS §4). A `manifest` table carries `id`, `from` and `to` (agents, CONVENTIONS §2), `delivered` (an instant), and `document_count`. Both kinds carry a chained log at `handover/events.toml` with entry name `event`, seeded from the table's `id`, recording `delivered`, `accepted`, and `rejected` events.
+A `document` table carries `id` (an identifier, CONVENTIONS §1), `delivery` (the identifier of the manifest it was delivered under), `document_number` and `revision` (strings, the owner's numbering), `fixity.content_sha256` (CONVENTIONS §2), and `issued` (a date, CONVENTIONS §3). A `manifest` table carries `id`, `from` and `to` (the contractor and the owner, each a table of `name` and an optional `lei`, a form the profile defines because no convention covers an organization outside the writer's own), `delivered` (an instant), and `document_count`. Both kinds carry a chained log at `handover/events.toml` with entry name `event`, seeded from the table's `id`, recording `delivered`, `accepted`, and `rejected` events.
 
 A document that is also a managed record carries both `[handover]` and `[records]`, each with its own prefix and its own log, and a records tool and a handover tool each read their own table and preserve the other's. Neither profile names the other, as §7 requires.
 

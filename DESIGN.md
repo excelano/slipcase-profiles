@@ -4,7 +4,7 @@
 
 `FRAMEWORK.md` and `CONVENTIONS.md` state the rules. This document says why each one is drawn where it is, and what was considered and rejected. Nothing here is normative: where this document and either of those disagree, they win and this document is wrong.
 
-A rule lives in one place. A change to a rule is an edit to the document that states it; a change to the reasoning is an edit here. Rules are cited as **FRAMEWORK §3** or **CONVENTIONS §5**, and the Slipcase specification as **SPEC §2.1**, because all three have a §3 and they are not the same subject. Each profile has a design document of its own in its directory.
+A rule lives in one place. A change to a rule is an edit to the document that states it; a change to the reasoning is an edit here. Rules are cited as **FRAMEWORK §3** or **CONVENTIONS §4**, and the Slipcase specification as **SPEC §2.1**, because all three have a §3 and they are not the same subject. Each profile has a design document of its own in its directory.
 
 ---
 
@@ -48,27 +48,27 @@ The framework is about where a profile's data lives. The conventions are about h
 
 **A profile must not redefine a convention.** The alternative, a profile that uses "mostly UUIDv7 but with one exception", is how a shared convention stops being shared. A profile that needs something a convention does not provide asks for the convention to change.
 
+**A convention is added when a second profile needs it, not the first.** A form generalized from one profile carries that profile's assumptions into every profile after it, and they read as shared rules when they are one profile's needs. The identity of a person is the case in point: a records system names its own staff, accountable and found in its directory, while a description names whoever made a document, inside the organization or not. Those are two concepts, and one form for both would fit neither. So a form one profile needs is defined by that profile, and it moves into the conventions when a second profile needs the same thing for the same reason, which is when there is evidence that it is shared.
+
 ## 7. The conventions, one by one
 
 **UUIDv7 (CONVENTIONS §1).** Time-ordered, so identifiers sort in creation order and index well, with no coordination needed to assign one. Lowercase hyphenated form because that is what RFC 9562 prints and what every library produces; constraining the case means comparison is a string comparison.
 
-**Agents as email plus directory ID (§2).** Email is what external systems (a legal hold platform, a mail server) match on, and a stable directory identifier is what survives a person changing their name or address. Neither alone is enough: email changes, and a directory ID means nothing to a system outside the directory. Both required, so that a record does not end up with one agent written one way and the next another.
+**Hashes over stored bytes (§2)**, never over a re-serialization, because TOML has no canonical form and SPEC says so (SPEC §2.2). A container is never hashed whole for the same reason at the ZIP level: a repack preserves every member and changes the bytes. The convention names the things that can be hashed so that a profile does not have to rediscover which.
 
-**Hashes over stored bytes (§3)**, never over a re-serialization, because TOML has no canonical form and SPEC says so (SPEC §2.2). A container is never hashed whole for the same reason at the ZIP level: a repack preserves every member and changes the bytes. The convention names the things that can be hashed so that a profile does not have to rediscover which.
-
-**Local dates and UTC instants, nothing else (§4).** A local date-time names no zone and so names no instant; two readers in two zones would disagree about when it was. A civil date (the date a document was created, the date a retention period starts) genuinely has no zone and is a different kind of value from an instant, and a profile says which each key is so that a reader does not guess. UTC with `Z` rather than an offset, so that instants compare as strings.
+**Local dates and UTC instants, nothing else (§3).** A local date-time names no zone and so names no instant; two readers in two zones would disagree about when it was. A civil date (the date a document was created, the date a retention period starts) genuinely has no zone and is a different kind of value from an instant, and a profile says which each key is so that a reader does not guess. UTC with `Z` rather than an offset, so that instants compare as strings.
 
 ## 8. The chained log
 
-This is the convention with the most rules, because it makes a claim the others do not: that the bytes are the bytes that were written. Everything in CONVENTIONS §5 follows from making that claim checkable.
+This is the convention with the most rules, because it makes a claim the others do not: that the bytes are the bytes that were written. Everything in CONVENTIONS §4 follows from making that claim checkable.
 
 **Why hash bytes and not meaning.** The obvious design hashes a canonical form of each entry, so that a formatter could reflow the file without breaking anything. TOML has no canonical form, so the design would have to invent one, and then every implementation would have to produce it byte for byte, which is the same problem moved somewhere harder to see. Hashing stored bytes needs no agreement about anything but where an entry starts and ends.
 
-**Why delimit by header line.** The byte range of an entry has to be found without parsing, or the hash depends on the parser. A header line that is exactly `[[event]]` is the one thing in a TOML array of tables that marks a boundary, and the written-form rules (§5.2) exist to make it unambiguous: no other line may equal it. Multi-line strings are forbidden because a multi-line string could contain such a line; comments are forbidden because a comment could too, and because nothing in a log needs one. The rejected alternative was a length prefix or a separator byte, which would have made the file not TOML.
+**Why delimit by header line.** The byte range of an entry has to be found without parsing, or the hash depends on the parser. A header line that is exactly `[[event]]` is the one thing in a TOML array of tables that marks a boundary, and the written-form rules (§4.2) exist to make it unambiguous: no other line may equal it. Multi-line strings are forbidden because a multi-line string could contain such a line; comments are forbidden because a comment could too, and because nothing in a log needs one. The rejected alternative was a length prefix or a separator byte, which would have made the file not TOML.
 
 **The trailing blank line belongs to the entry before it.** An entry runs to the byte before the next header, so the blank line a writer puts between entries is part of the earlier entry's bytes and is covered by the later entry's `prev`. That is the simpler rule (one boundary, not two), and it means the whitespace between entries is also something an edit cannot change unnoticed.
 
-**LF only, no BOM, nothing before the first header.** Each of these is a byte that would otherwise be outside every entry and so outside every hash, or a byte that a tool changes silently. CRLF is the one that bites: a version control system or an editor on Windows will convert it, and the chain breaks. CONVENTIONS §5.5 says that is the chain working, which is true, and it is also why a profile should think about where a log is stored. The Records Profile stores its log inside the container, where no such tool runs.
+**LF only, no BOM, nothing before the first header.** Each of these is a byte that would otherwise be outside every entry and so outside every hash, or a byte that a tool changes silently. CRLF is the one that bites: a version control system or an editor on Windows will convert it, and the chain breaks. CONVENTIONS §4.5 says that is the chain working, which is true, and it is also why a profile should think about where a log is stored. The Records Profile stores its log inside the container, where no such tool runs.
 
 **The seed ties the log to its owner.** Without it, a log could be lifted out of one container and dropped into another and verify perfectly. Seeding the first `prev` from the container's identifier means the first link breaks instead. The seed is the profile's to define because only the profile knows what the log belongs to.
 
@@ -76,7 +76,7 @@ This is the convention with the most rules, because it makes a claim the others 
 
 **Refuse rather than repair.** A file that does not end with LF, or that has no header line, is either not a log or has been damaged. Fixing it means writing bytes into a region an earlier hash may cover. The writer stops and reports; a person decides.
 
-**The head (CONVENTIONS §5.5).** A chain of `prev` links covers every entry but the last, so the two edits it cannot see are an edit to the last entry and a truncation. The first test written against the verifier found the first of these: change `hold_applied` to `hold_released` in a two-entry log and the log is intact. Both are closed by recording the hash of the last entry somewhere the log cannot reach. The convention requires a profile to say where, rather than fixing a place, because the right place differs: the Records Profile has a flyleaf that changes in the same repack as every append, which is the natural home; a log that is a file beside containers has to find one.
+**The head (CONVENTIONS §4.5).** A chain of `prev` links covers every entry but the last, so the two edits it cannot see are an edit to the last entry and a truncation. The first test written against the verifier found the first of these: change `hold_applied` to `hold_released` in a two-entry log and the log is intact. Both are closed by recording the hash of the last entry somewhere the log cannot reach. The convention requires a profile to say where, rather than fixing a place, because the right place differs: the Records Profile has a flyleaf that changes in the same repack as every append, which is the natural home; a log that is a file beside containers has to find one.
 
 **`seq` as well as `prev`.** With the head recorded, `prev` and the head together detect every edit. `seq` adds nothing to detection; it makes a gap or a reorder reportable by number rather than only as "the hash is wrong somewhere", and it gives entries an order independent of `at`, which a wrong clock can scramble.
 

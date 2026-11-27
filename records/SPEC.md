@@ -10,7 +10,7 @@ Everything a record says about itself is in its own container. There is no index
 
 ## 1. Identity and terminology
 
-The key words **MUST**, **MUST NOT**, and **MAY** are to be interpreted as described in BCP 14 when, and only when, they appear in capitals. **FRAMEWORK**, **CONVENTIONS**, and **SPEC** cite the profiles framework, the shared conventions, and the Slipcase specification.
+The key words **MUST**, **MUST NOT**, **SHOULD**, and **MAY** are to be interpreted as described in BCP 14 when, and only when, they appear in capitals. **FRAMEWORK**, **CONVENTIONS**, and **SPEC** cite the profiles framework, the shared conventions, and the Slipcase specification.
 
 | | |
 |---|---|
@@ -143,7 +143,7 @@ schedule_version = "20261005T140211Z-3fa9c2e1b7d0"
 
 - **`code`** — string, non-empty. The organization's code for the series, as it appears in the schedule (§3). Never a vendor's identifier. Two entries MUST NOT carry the same `code`.
 - **`trigger`** — date, optional. The date retention is measured from. Absent while the record is awaiting the event that starts its retention; present once that event has been recorded (§2.8, `event_applied`).
-- **`snapshot`** — table, optional. What the schedule said about the series when the entry was written, for a reader with no schedule to hand. Every key in it is a string, and every key is optional. It is informational: no decision under this profile is taken from a snapshot, and a snapshot that differs from the schedule is reported, never acted on (§8). It is refreshed only by an explicit, logged action.
+- **`snapshot`** — table, optional. What the schedule said about the series when the entry was written, for a reader with no schedule to hand. Every key in it is a string, and every key is optional. It is informational: no decision under this profile is taken from a snapshot, and a snapshot that differs from the schedule is reported, never acted on (§8). It is written with its entry, and changes only in an operation that appends a `classified`, `reclassified`, or `renumbered` event for that series (§2.8).
 
 Most records have one series. A record MAY have several, and §8 defines what that means for its retention.
 
@@ -419,7 +419,7 @@ id = "7a6b5c4d-3e2f-4a1b-9c8d-7e6f5a4b3c2d"
 | `approved_by` | agent | Who authorized the hold. |
 | `placed` | date | When the hold was placed. |
 | `end_date` | date, optional | For an `extension`, when it releases itself (§4.3). |
-| `scope` | string | A SlipQL `where` expression (<https://github.com/excelano/slipql>) over a record's `[records]` table: paths in it are relative to that table, so `custodian.email` names the custodian's address, and no other profile's table is reachable (FRAMEWORK §7). The hold applies to every record it is true for. |
+| `scope` | string | A SlipQL `where` expression, as the grammar of SlipQL 0.3.0 defines it (<https://github.com/excelano/slipql/blob/v0.3.0/GRAMMAR.md>), over a record's `[records]` table: paths in it are relative to that table, so `custodian.email` names the custodian's address, and no other profile's table is reachable (FRAMEWORK §7). The hold applies to every record it is true for. |
 | `status` | string | `active` or `released`. |
 | `released` | date | Present when and only when `status` is `released`. |
 | `events_head` | hash | §4.2. |
@@ -508,7 +508,7 @@ The register is the record of destruction: one entry per **batch**, where a batc
 
 ### 6.1 Files
 
-Each batch occupies four files, named by its **sequence**, a six-digit zero-padded decimal starting at `000001`. The lock file comes first, and the journal appears with the batch's first outcome, so an intent with no journal is a run that has not yet touched a record:
+A batch has up to four files, named by its **sequence**, a six-digit zero-padded decimal starting at `000001`. The lock file comes first where the run takes one (§6.7), and the journal appears with the batch's first outcome, so an intent with no journal is a run that has not yet touched a record. A batch with no lock file, or no journal, is not made non-conformant by its absence:
 
 ```
 register/
@@ -778,7 +778,7 @@ Where a series' action is `review`, the series falling due makes the record `rev
 | `extend` | The record is kept and reviewed again. | The series' period restarts from the review date, with the series' cutoff applied as for any trigger (§8.2), and the series falls due again at its end. |
 | `destroy` | The review confirms destruction. | The series is due from the review date with action `destroy`, as if the schedule had said so; the record's other series and holds still apply (§8.5). |
 
-A series is **decided** by the latest `reviewed` entry naming it whose date is on or after the series' due date; an earlier decision belongs to an earlier review and has no effect on the one now due. A `decision` outside the three is non-conformant.
+A `reviewed` entry's **review date** is the date of its `at` in UTC. A series is **decided** by the latest `reviewed` entry naming it whose review date is on or after the series' due date; an earlier decision belongs to an earlier review and has no effect on the one now due. A `decision` outside the three is non-conformant.
 
 ### 8.5 Eligible
 

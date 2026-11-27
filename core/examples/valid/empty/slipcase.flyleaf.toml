@@ -1,0 +1,9 @@
+slipcase_version = "1.1"
+
+[content]
+file = "note.txt"
+
+[core]
+profile = "https://slipcaseformat.org/profiles/core"
+profile_version = "1.0"
+kind = "resource"

@@ -93,6 +93,28 @@ class VerifyRegister(unittest.TestCase):
             self.assertIn("not a register", got.stderr)
 
 
+class CheckCore(unittest.TestCase):
+    def test_every_case_reaches_its_verdict(self):
+        cases = REPO / "core" / "examples"
+        manifest = tomllib.loads((cases / "manifest.toml").read_text())
+        for case in manifest["case"]:
+            with self.subTest(case["name"]):
+                folder = "valid" if case["verdict"] == "conformant" else "invalid"
+                got = run("check-core.py", cases / folder / case["name"])
+                if case["verdict"] == "conformant":
+                    self.assertEqual(got.returncode, 0, got.stdout + got.stderr)
+                    self.assertEqual(got.stdout.strip(), "conformant")
+                else:
+                    self.assertEqual(got.returncode, 1, got.stdout + got.stderr)
+                    self.assertTrue(
+                        got.stdout.startswith(f"non-conformant {case['rule']}:"),
+                        got.stdout,
+                    )
+
+    def test_a_missing_case_is_a_usage_error(self):
+        self.assertEqual(run("check-core.py", REPO / "no-such-case").returncode, 2)
+
+
 class CheckSchedule(unittest.TestCase):
     def test_each_schedule_example_reaches_its_verdict(self):
         schedules = EXAMPLES / "schedule"

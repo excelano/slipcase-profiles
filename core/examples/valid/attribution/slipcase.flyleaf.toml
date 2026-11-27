@@ -1,0 +1,26 @@
+slipcase_version = "1.1"
+
+[content]
+file = "study.txt"
+
+[core]
+profile = "https://slipcaseformat.org/profiles/core"
+profile_version = "1.0"
+kind = "resource"
+title = "Bulk terminal throughput study"
+
+[[core.creator]]
+name = "Gulf Geotechnical Ltd."
+lei = "5493001KJTIIGC8Y1R12"
+
+[[core.creator]]
+name = "Jane Doe"
+email = "jdoe@gulfgeo.example"
+orcid = "0000-0002-1825-0097"
+
+[[core.publisher]]
+name = "Port Authority of Example"
+uri = "https://port.example/"
+
+[[core.rightsHolder]]
+name = "Port Authority of Example"

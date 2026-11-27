@@ -1,0 +1,39 @@
+slipcase_version = "1.1"
+
+[content]
+file = "site-survey.txt"
+
+[core]
+profile = "https://slipcaseformat.org/profiles/core"
+profile_version = "1.0"
+kind = "resource"
+title = "Site survey, Lake Charles terminal"
+alternative = "Site survey LC-N"
+description = "Geotechnical survey of the north tank farm, with boring logs."
+subject = ["geotechnical survey", "tank farm", "boring logs"]
+identifier = ["GS-2024-0117", "https://docs.example/gs-2024-0117"]
+source = ["Boring logs B-1 to B-12"]
+relation = ["GS-2023-0091"]
+isPartOf = ["Lake Charles terminal design basis"]
+coverage = ["Lake Charles, Louisiana"]
+rights = ["Prepared for the owner under contract C-4471."]
+language = ["en-US"]
+license = ["https://creativecommons.org/licenses/by/4.0/"]
+type = "Text"
+format = "text/plain"
+date = 2024-03-01
+created = 2024-03-18
+modified = 2024-03-29
+issued = 2024-04-02
+
+[[core.creator]]
+name = "Gulf Geotechnical Ltd."
+
+[[core.contributor]]
+name = "Jane Doe"
+
+[[core.publisher]]
+name = "Gulf Geotechnical Ltd."
+
+[[core.rightsHolder]]
+name = "Port Authority of Example"

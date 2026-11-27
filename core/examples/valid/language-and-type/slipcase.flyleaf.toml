@@ -1,0 +1,12 @@
+slipcase_version = "1.1"
+
+[content]
+file = "plan.png"
+
+[core]
+profile = "https://slipcaseformat.org/profiles/core"
+profile_version = "1.0"
+kind = "resource"
+type = "StillImage"
+format = "image/png"
+language = ["de", "en-GB", "zh-Hant-TW"]

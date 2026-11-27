@@ -1,0 +1,106 @@
+# Every example under valid/ and invalid/, with the verdict an implementation of
+# Core Profile 1.0 reaches and the section whose rule decides it. Each case is a
+# directory in container form: pack it with the flyleaf and the content file.
+# Not normative: where a case and SPEC.md disagree, the specification wins.
+
+[[case]]
+name = "empty"
+verdict = "conformant"
+rule = "2"
+note = "Only the framework keys: conformant, and says nothing about the resource."
+
+[[case]]
+name = "attribution"
+verdict = "conformant"
+rule = "3.1"
+note = "Two creators in credited order, one with an LEI, one with an email; a publisher; a rights holder."
+
+[[case]]
+name = "full"
+verdict = "conformant"
+rule = "2.2"
+note = "Every key §2.2 defines, each in its form."
+
+[[case]]
+name = "language-and-type"
+verdict = "conformant"
+rule = "3.7"
+note = "Three well-formed BCP 47 tags, one with a script subtag, and a DCMI type."
+
+[[case]]
+name = "unknown-key"
+verdict = "conformant"
+rule = "2.2"
+note = "A key the profile does not define is permitted and preserved."
+
+[[case]]
+name = "profile-uri-wrong"
+verdict = "non-conformant"
+rule = "FRAMEWORK 3"
+note = "A [core] table whose profile URI names another specification."
+
+[[case]]
+name = "kind-unknown"
+verdict = "non-conformant"
+rule = "FRAMEWORK 5"
+note = "Core 1.0 defines one kind, resource."
+
+[[case]]
+name = "creator-is-string"
+verdict = "non-conformant"
+rule = "5.1"
+note = "An attribution key written as a bare string."
+
+[[case]]
+name = "creator-without-name"
+verdict = "non-conformant"
+rule = "5.1"
+note = "An attribution table with an email and no name."
+
+[[case]]
+name = "subject-is-string"
+verdict = "non-conformant"
+rule = "5.2"
+note = "A repeatable key written as a bare string; one value is an array of one."
+
+[[case]]
+name = "empty-string"
+verdict = "non-conformant"
+rule = "5.2"
+note = "An empty string in a repeatable key."
+
+[[case]]
+name = "title-is-array"
+verdict = "non-conformant"
+rule = "5.3"
+note = "A single-text key written as an array."
+
+[[case]]
+name = "created-is-instant"
+verdict = "non-conformant"
+rule = "5.4"
+note = "A date key holding an instant."
+
+[[case]]
+name = "type-unknown"
+verdict = "non-conformant"
+rule = "5.5"
+note = "A type outside the DCMI Type Vocabulary."
+
+[[case]]
+name = "format-not-media-type"
+verdict = "non-conformant"
+rule = "5.6"
+note = "A format that is a file extension, not a media type."
+
+[[case]]
+name = "language-malformed"
+verdict = "non-conformant"
+rule = "5.7"
+note = "A language tag with an underscore, which BCP 47 does not use as a separator."
+
+[[case]]
+name = "license-not-uri"
+verdict = "non-conformant"
+rule = "5.8"
+note = "A license that is a phrase, not a URI; free text belongs in rights."

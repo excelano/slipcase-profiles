@@ -11,6 +11,7 @@ Each official profile lives in its own directory, with its specification, its de
 | Profile | Table | Status |
 |---|---|---|
 | Slipcase Records Profile (`records/`) | `[records]` | 1.0, final |
+| Slipcase Core Profile (`core/`) | `[core]` | 1.0, draft: Dublin Core metadata for the content file |
 
 A profile specified somewhere else is a profile all the same: the framework identifies a profile by its URI, under any origin.
 

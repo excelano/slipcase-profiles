@@ -164,7 +164,7 @@ Format identification beyond a media type (PRONOM); the key is reserved so that 
 
 **The never-destroy list is in the implementation section (RECORDS §9)**, restating §8.5 from the other side, because the one place a reader of an implementation looks for "what will this refuse" should hold the answer without a derivation.
 
-**A sweep report in the records root, exceptions in the record (RECORDS §9).** NARA requires a documented integrity check; a report per sweep is that document. The record's own log gets only what the sweep found wrong, for the reason §7 of this document gives.
+**A sweep report in the records root, exceptions in the record (RECORDS §9).** NARA requires integrity controls, "such as audit trails, to ensure records are complete and unaltered" (36 CFR 1236.10(c)); a report per sweep documents that the control ran. The record's own log gets only what the sweep found wrong, for the reason §7 of this document gives.
 
 **Paths in logs are never opened (RECORDS §10).** A log is data that anyone who can write a container can write. Treating a path from it as a place to delete would make the register a weapon.
 

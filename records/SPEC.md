@@ -369,7 +369,7 @@ What NARA's layout lacks goes in columns whose names begin with `x_`. A file usi
 
 | Column | Values | Meaning |
 |---|---|---|
-| `x_disposal_action` | `destroy`, `transfer`, `review`, `retain` | What happens when the period elapses. Absent: `destroy` for `Temporary`, `retain` for `Permanent`. `review` is MoReq2010's review: a person decides (§8.4). `transfer` is reserved: records under it are treated as `retain` in this version. |
+| `x_disposal_action` | `destroy`, `transfer`, `review`, `retain` | What happens when the period elapses. Absent: `destroy` for `Temporary`, `transfer` for `Permanent`, since a permanent record goes to an archive when its period elapses. `review` is MoReq2010's review: a person decides (§8.4). `transfer` is reserved: records under it are treated as `retain` in this version. |
 | `x_cutoff` | `none`, `calendar_year`, `fiscal_year`, `quarter`, `month` | Retention starts at the end of the cutoff period containing the trigger (§8.2). Absent: `fiscal_year` where the event is `End of FY`, otherwise `none`. |
 | `x_period_kind` | `minimum`, `maximum`, `fixed` | Absent: `minimum` where `Longer Retention Authorized?` is `Yes`, `fixed` where it is `No`, and `minimum` where it is not stated. A `maximum` is a deadline (§8.3). |
 | `x_maximum` | A period, as §3.3 reads one | A series that has both a minimum and a maximum states the minimum in the period column and the maximum here, on the one row. Where present, `x_period_kind` MUST be absent or `minimum`. |

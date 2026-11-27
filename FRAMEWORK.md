@@ -29,7 +29,7 @@ A container that Slipcase calls undetermined (SPEC §2.2) is undetermined for ev
 
 ## 3. The profile table
 
-A profile owns exactly one top-level table in the flyleaf, and everything the profile defines in the flyleaf lives inside that table. The table's name is the profile's use-case word (§9), in lowercase ASCII letters.
+A profile owns exactly one top-level table in the flyleaf, and everything the profile defines in the flyleaf lives inside that table. The table's name is the profile's use-case word (§9): lowercase ASCII letters and digits, beginning with a letter.
 
 The table MUST contain these three keys:
 
@@ -87,7 +87,7 @@ Identifiers, hashes, dates and instants, and chained logs are defined once, in `
 
 ## 9. Official profiles
 
-An official profile is one specified in this repository. Its name is **Slipcase _Use_ Profile**, where _Use_ is one word naming the purpose, and that word is the same everywhere the profile is referred to:
+An official profile is one specified in this repository. Its name is **Slipcase _Use_ Profile**, where _Use_ is one word naming the purpose, or the name of the standard the profile carries (as `id3` or `mp4`), and that word is the same everywhere the profile is referred to:
 
 | | Slipcase Records Profile |
 |---|---|

@@ -100,7 +100,9 @@ The table name and the prefix are the last segment of the URI. A profile's speci
 
 Each official profile lives in its own directory, holding its specification, a design document recording the reasoning behind its rules, and example files, and is versioned on its own. Everything in this repository is dedicated to the public domain under CC0 1.0.
 
-A profile specified elsewhere is not made less valid by that: a `profile` URI under any origin identifies a profile, and this framework governs it the same way. Only the name form in this section and the directory in this repository are reserved for official profiles.
+A profile specified elsewhere is not made less valid by that: a `profile` URI under any origin identifies a profile, and this framework governs it the same way. Reserved for official profiles are the name form in this section, the directory in this repository, and URIs under `https://slipcaseformat.org/profiles/`, which the maintainers of slipcaseformat.org assign. A profile specified elsewhere takes its URI from an origin its author controls.
+
+A table name is not reserved by anything in this framework, and two profiles that fix the same table name cannot be carried in one flyleaf. An author choosing a table name avoids one already used by a profile listed at <https://slipcaseformat.org/profiles/>, which records the table names in use.
 
 ## 10. What a profile specification states
 
@@ -134,7 +136,7 @@ Slipcase's security considerations (SPEC §6) apply to every container a profile
 
 ## Appendix A. A second profile, described against this framework (non-normative)
 
-This appendix exists to show that the framework is general: a profile unrelated to records management is stated against it without a change to any section above. The profile is hypothetical.
+This appendix exists to show that the framework is general: a profile unrelated to records management is stated against it without a change to any section above. The profile is hypothetical, and is described as an official profile would be, which is why its URI is under slipcaseformat.org (§9).
 
 **Slipcase Handover Profile**, for delivering a set of engineering documents from a contractor to an owner. URI `https://slipcaseformat.org/profiles/handover`, table `[handover]`, prefix `handover/`, written against Framework 1.0 and Slipcase 1.1.
 

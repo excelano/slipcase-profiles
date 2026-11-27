@@ -6,7 +6,7 @@
 
 ## 1. Borrowed, not invented
 
-Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever writes it, which means containers from different producers describe the same thing as `title`, `Title`, and `doc_title`. The fix is a vocabulary, and the vocabulary already exists. Dublin Core, first published in 1995 and an ISO standard (15836) since 2003, is the common denominator of document description: Office's document properties are Dublin Core underneath, so are OpenDocument's and XMP's, and archive and repository systems commonly map to it. A profile with its own vocabulary would be one more set of names to map; a profile that is Dublin Core needs no mapping at all to anything that already speaks it.
+Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever writes it, which means containers from different producers describe the same thing as `title`, `Title`, and `doc_title`. The fix is a vocabulary, and the vocabulary already exists. Dublin Core, begun at a 1995 workshop, published as an element set in 1998 (RFC 2413), and an ISO standard (15836) since 2003, is the common denominator of document description: Office's document properties are Dublin Core underneath, so are OpenDocument's and XMP's, and archive and repository systems commonly map to it. A profile with its own vocabulary would be one more set of names to map; a profile that is Dublin Core needs no mapping at all to anything that already speaks it.
 
 **Key names are DCMI's own (CORE §2.2), case included.** `rightsHolder` breaks the snake case the rest of a flyleaf tends to use, on purpose: the key is the term, and anyone who knows Dublin Core reads it without a table. Each key cites its term's URI, so a program that wants RDF can have it without the profile defining any.
 
@@ -16,7 +16,7 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 ## 2. Which terms
 
-**The fifteen elements, and the refinements people and files use.** The DCMI Metadata Terms define more than fifty properties. A profile carrying all of them would offer keys nobody fills. The set is the fifteen classic elements plus seven refinements. `created` and `modified` are what Office records as `dcterms:` elements. `alternative`, `issued`, `license`, `rightsHolder`, and `isPartOf` are in the set because a person describing a document reaches for them: a short title, a publication date, a license, an owner, the series a document belongs to. A term outside the set can be written in the table and is preserved (FRAMEWORK §3); a later version adds terms when files or people turn out to carry them.
+**The fifteen elements, and the further terms people and files use.** The DCMI Metadata Terms define more than fifty properties. A profile carrying all of them would offer keys nobody fills. The set is the fifteen classic elements plus seven further DCMI terms. `created` and `modified` are what Office records as `dcterms:` elements. `alternative`, `issued`, `license`, `rightsHolder`, and `isPartOf` are in the set because a person describing a document reaches for them: a short title, a publication date, a license, an owner, the series a document belongs to. A term outside the set can be written in the table and is preserved (FRAMEWORK §3); a later version adds terms when files or people turn out to carry them.
 
 **Nothing that is not Dublin Core.** Office records who last modified a file, its revision number, a category, and a status, and none of these are Dublin Core terms. Mapping them in would give the profile keys of its own, which is what it exists to avoid.
 
@@ -24,7 +24,7 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 **A creator is whoever the document credits (CORE §3.1).** A report written by a consultant, a datasheet from a vendor, a paper with three authors: the people named are mostly outside the organization holding the file, and many are organizations. So an attribution is a name, required, with whatever identifiers are known beside it, and nothing in it is checked against any directory. It answers who the document says made it, not who in the organization answers for it.
 
-**Identifiers are optional and never invented (CORE §4.5).** An ORCID iD identifies a researcher and an LEI a company, and either makes a name unambiguous. A tool filling the table from a file writes one only when the file states it, because a guessed identifier is worse than none: it looks authoritative.
+**Identifiers are optional and never invented (CORE §4.3).** An ORCID iD identifies a researcher and an LEI a company, and either makes a name unambiguous. A tool filling the table from a file writes one only when the file states it, because a guessed identifier is worse than none: it looks authoritative.
 
 **An author string stays whole.** `Doe, J.; Roe, R.` looks like two people, and splitting it looks helpful. But the separators in author strings are not standardized (a comma separates surname from initials as often as it separates people), and two tools splitting differently would write different tables from the same file, which CORE §4 exists to prevent.
 

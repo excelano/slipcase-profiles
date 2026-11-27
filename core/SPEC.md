@@ -54,7 +54,7 @@ rights = ["Prepared for the owner under contract C-4471."]
 
 [[core.creator]]
 name = "Gulf Geotechnical Ltd."
-lei = "5493000GULFGEO0EX001"
+lei = "5493000GULFGEO0EX060"
 
 [[core.creator]]
 name = "Jane Doe"
@@ -85,7 +85,7 @@ email = "jdoe@gulfgeo.example"
 | `format` | `http://purl.org/dc/terms/format` | format (§3.6) | Its file format. DCMI's term also covers a physical medium or dimensions; for a content file it is the media type. |
 | `date` | `http://purl.org/dc/terms/date` | date (§3.4) | A point or period of time in its life cycle. The refinements below say more where one fits. |
 | `created` | `http://purl.org/dc/terms/created` | date | When it was created. |
-| `modified` | `http://purl.org/dc/terms/modified` | date | When it was last changed. |
+| `modified` | `http://purl.org/dc/terms/modified` | date | A date on which it was changed. |
 | `issued` | `http://purl.org/dc/terms/issued` | date | When it was formally issued or published. |
 
 Key names are DCMI's own, case included, so that `rightsHolder` here is `rightsHolder` in every DCMI serialization. Keys this section does not define are permitted in the table and MUST be preserved (FRAMEWORK §3). A later version of this profile may add DCMI terms; it never adds a key that is not one.

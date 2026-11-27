@@ -18,8 +18,8 @@ TYPES = {"Collection", "Dataset", "Event", "Image", "InteractiveResource", "Movi
          "PhysicalObject", "Service", "Software", "Sound", "StillImage", "Text"}
 
 RESTRICTED = r"[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}"
-MEDIA_TYPE = re.compile(rf"^{RESTRICTED}/{RESTRICTED}$")
-URI = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:\S+$")
+MEDIA_TYPE = re.compile(rf"{RESTRICTED}/{RESTRICTED}")
+URI = re.compile(r"[A-Za-z][A-Za-z0-9+.-]*:\S+")
 
 ALNUM = "[A-Za-z0-9]"
 LANGTAG = (
@@ -36,7 +36,7 @@ GRANDFATHERED = (
     "i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE|art-lojban|cel-gaulish|"
     "no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang"
 )
-BCP47 = re.compile(rf"^(?:{LANGTAG}|{PRIVATEUSE}|{GRANDFATHERED})$", re.IGNORECASE)
+BCP47 = re.compile(rf"(?:{LANGTAG}|{PRIVATEUSE}|{GRANDFATHERED})", re.IGNORECASE)
 
 
 class NonConformant(Exception):
@@ -50,8 +50,8 @@ def nonempty_string(value) -> bool:
 
 def string_array(core: dict, key: str, rule: str) -> list:
     value = core[key]
-    if not isinstance(value, list):
-        raise NonConformant(rule, f"{key} is not an array")
+    if not isinstance(value, list) or not value:
+        raise NonConformant(rule, f"{key} is not a non-empty array")
     for entry in value:
         if not nonempty_string(entry):
             raise NonConformant(rule, f"{key} holds {entry!r}, not a non-empty string")
@@ -67,8 +67,8 @@ def check(core: dict) -> None:
         if key not in core:
             continue
         parties = core[key]
-        if not isinstance(parties, list) or not all(isinstance(p, dict) for p in parties):
-            raise NonConformant("5.1", f"{key} is not an array of tables")
+        if not isinstance(parties, list) or not parties or not all(isinstance(p, dict) for p in parties):
+            raise NonConformant("5.1", f"{key} is not a non-empty array of tables")
         for party in parties:
             if not nonempty_string(party.get("name")):
                 raise NonConformant("5.1", f"a {key} table has no name")
@@ -84,17 +84,17 @@ def check(core: dict) -> None:
     for key in DATES:
         if key in core and type(core[key]) is not datetime.date:
             raise NonConformant("5.4", f"{key} is not a local date")
-    if "type" in core and core["type"] not in TYPES:
+    if "type" in core and not (isinstance(core["type"], str) and core["type"] in TYPES):
         raise NonConformant("5.5", f"type {core['type']!r} is not a DCMI Type term")
-    if "format" in core and not (isinstance(core["format"], str) and MEDIA_TYPE.match(core["format"])):
+    if "format" in core and not (isinstance(core["format"], str) and MEDIA_TYPE.fullmatch(core["format"])):
         raise NonConformant("5.6", f"format {core['format']!r} is not a media type")
     if "language" in core:
         for tag in string_array(core, "language", "5.7"):
-            if not BCP47.match(tag):
+            if not BCP47.fullmatch(tag):
                 raise NonConformant("5.7", f"language {tag!r} is not a well-formed BCP 47 tag")
     if "license" in core:
         for uri in string_array(core, "license", "5.8"):
-            if not URI.match(uri):
+            if not URI.fullmatch(uri):
                 raise NonConformant("5.8", f"license {uri!r} is not an absolute URI")
 
 

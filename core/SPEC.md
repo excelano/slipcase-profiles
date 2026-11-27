@@ -17,7 +17,7 @@ The key words **MUST**, **MUST NOT**, and **MAY** are to be interpreted as descr
 | Profile table | `[core]` |
 | Profile prefix | `core/` (this version defines no members under it) |
 | Kinds | `resource` |
-| Conventions used | dates and instants |
+| Conventions used | dates (CONVENTIONS §3) |
 
 **Resource** — the content file the container holds, which the `[core]` table describes. DCMI calls the thing described a resource, and the kind takes its name.
 
@@ -54,7 +54,7 @@ rights = ["Prepared for the owner under contract C-4471."]
 
 [[core.creator]]
 name = "Gulf Geotechnical Ltd."
-lei = "5493001KJTIIGC8Y1R12"
+lei = "5493000GULFGEO0EX001"
 
 [[core.creator]]
 name = "Jane Doe"
@@ -68,7 +68,7 @@ email = "jdoe@gulfgeo.example"
 | `title` | `http://purl.org/dc/terms/title` | single text | The name given to the resource. |
 | `alternative` | `http://purl.org/dc/terms/alternative` | single text | Another name for it, such as an abbreviation or a translated title. |
 | `description` | `http://purl.org/dc/terms/description` | single text | An account of the resource: an abstract, a summary, a table of contents. |
-| `creator` | `http://purl.org/dc/terms/creator` | attribution | Who is primarily responsible for making it. |
+| `creator` | `http://purl.org/dc/terms/creator` | attribution | Who is responsible for making it. |
 | `contributor` | `http://purl.org/dc/terms/contributor` | attribution | Who contributed to it. |
 | `publisher` | `http://purl.org/dc/terms/publisher` | attribution | Who made it available. |
 | `rightsHolder` | `http://purl.org/dc/terms/rightsHolder` | attribution | Who owns or manages rights over it. |
@@ -77,13 +77,13 @@ email = "jdoe@gulfgeo.example"
 | `source` | `http://purl.org/dc/terms/source` | repeatable text | Resources it is derived from. |
 | `relation` | `http://purl.org/dc/terms/relation` | repeatable text | Related resources. |
 | `isPartOf` | `http://purl.org/dc/terms/isPartOf` | repeatable text | Resources it is physically or logically included in. |
-| `coverage` | `http://purl.org/dc/terms/coverage` | repeatable text | Its spatial or temporal topic, or the jurisdiction it applies to. |
+| `coverage` | `http://purl.org/dc/terms/coverage` | repeatable text | Its spatial or temporal topic, where it applies, or the jurisdiction under which it is relevant. |
 | `rights` | `http://purl.org/dc/terms/rights` | repeatable text | Statements about rights held in and over it. |
 | `language` | `http://purl.org/dc/terms/language` | language (§3.7) | The languages of its content. |
 | `license` | `http://purl.org/dc/terms/license` | license (§3.8) | Legal documents giving permission to do something with it. |
 | `type` | `http://purl.org/dc/terms/type` | type (§3.5) | Its nature or genre. |
-| `format` | `http://purl.org/dc/terms/format` | format (§3.6) | Its file format. |
-| `date` | `http://purl.org/dc/terms/date` | date (§3.4) | A date associated with an event in its life cycle, where none of the three below is meant. |
+| `format` | `http://purl.org/dc/terms/format` | format (§3.6) | Its file format. DCMI's term also covers a physical medium or dimensions; for a content file it is the media type. |
+| `date` | `http://purl.org/dc/terms/date` | date (§3.4) | A point or period of time in its life cycle. The refinements below say more where one fits. |
 | `created` | `http://purl.org/dc/terms/created` | date | When it was created. |
 | `modified` | `http://purl.org/dc/terms/modified` | date | When it was last changed. |
 | `issued` | `http://purl.org/dc/terms/issued` | date | When it was formally issued or published. |
@@ -108,11 +108,11 @@ Attribution names whoever the resource credits, inside the organization that wro
 
 ### 3.2 Repeatable text
 
-`subject`, `identifier`, `source`, `relation`, `isPartOf`, `coverage`, and `rights` are arrays of strings. A single value is an array of one: a bare string is non-conformant, so a reader has one shape to handle. No entry is an empty string.
+`subject`, `identifier`, `source`, `relation`, `isPartOf`, `coverage`, and `rights` are arrays of strings. A single value is an array of one: a bare string is non-conformant, so a reader has one shape to handle. No entry is an empty string, and no array is empty: a key with no value is absent. An `identifier` entry is any string that refers to the resource, not an identifier in the sense of CONVENTIONS §1.
 
 ### 3.3 Single text
 
-`title`, `alternative`, and `description` are strings, non-empty. Dublin Core allows a term to repeat; this profile does not repeat these three, because every source in §4 carries one of each.
+`title`, `alternative`, and `description` are strings, non-empty. Dublin Core allows a term to repeat; this profile does not repeat these three, because each source in §4 carries at most one of each.
 
 ### 3.4 Dates
 
@@ -181,7 +181,7 @@ The document information dictionary of a PDF:
 |---|---|---|
 | `/Title` | `title` | |
 | `/Author` | `creator` | One attribution table (§4.5). |
-| `/Subject` | `description` | A PDF's Subject is a sentence about the document, not a topic. |
+| `/Subject` | `description` | Where XMP places it (`dc:description`), so §4.3 and §4.4 agree when combined. |
 | `/Keywords` | `subject` | The value split on `;` and `,`, each part trimmed, empty parts dropped. |
 | `/CreationDate` | `created` | §4.5 for an instant. |
 | `/ModDate` | `modified` | §4.5 for an instant. |
@@ -213,20 +213,22 @@ Where a PDF carries both an XMP packet and a document information dictionary, th
 - An author string becomes one attribution table whose `name` is the string, whatever separators it contains: `Doe, J.; Roe, R.` is one name. Only the keyword fields of §4.1 and §4.3 are split. A source never yields an `email`, `uri`, `orcid`, or `lei` the file does not state as one.
 - An instant becomes its date in UTC. A timestamp that states no offset is read as UTC. A date that gives only a year or a year and month maps to nothing, since a date key holds a whole day.
 - Subject entries keep their first occurrence and drop later exact duplicates.
+- A source field this section does not list maps to nothing, even where its name matches a key.
+- A value that would not satisfy §5 for its key maps to nothing; the rest of the source is still mapped.
 - `format`, where the source does not state it, is the content file's media type as the implementation determines it, or absent.
 
 ## 5. Conformance
 
 A container conforms to this version when its `[core]` table satisfies FRAMEWORK §3 and §5 and each of the following, where the key is present:
 
-1. Every attribution key (§3.1) is an array of tables, each with a non-empty string `name`, and each of its other §3.1 keys present is a string.
-2. Every repeatable-text key (§3.2) is an array of non-empty strings.
+1. Every attribution key (§3.1) is a non-empty array of tables, each with a non-empty string `name`, and each of its other §3.1 keys present is a string.
+2. Every repeatable-text key (§3.2) is a non-empty array of non-empty strings.
 3. Every single-text key (§3.3) is a non-empty string.
 4. Every date key (§3.4) is a TOML local date (CONVENTIONS §3).
 5. `type` is one of the twelve values of §3.5.
 6. `format` is a media type in the form of §3.6.
-7. Every `language` entry is a well-formed BCP 47 tag, in an array (§3.7).
-8. Every `license` entry is an absolute URI, in an array (§3.8).
+7. `language` is a non-empty array, and every entry is a well-formed BCP 47 tag (§3.7).
+8. `license` is a non-empty array, and every entry is an absolute URI (§3.8).
 
 Nothing in this section depends on anything but the flyleaf, and nothing in it depends on the content file: whether a title is accurate is not a conformance question.
 

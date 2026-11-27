@@ -110,3 +110,27 @@ name = "from-word"
 verdict = "conformant"
 rule = "4.1"
 note = "Filled from fixtures/word-core.xml as §4.1 and §4.5 say: Subject then the split Keywords, the author string kept whole, created as its UTC date, lastModifiedBy and revision dropped."
+
+[[case]]
+name = "type-is-array"
+verdict = "non-conformant"
+rule = "5.5"
+note = "A type written as an array; it is one value."
+
+[[case]]
+name = "format-trailing-newline"
+verdict = "non-conformant"
+rule = "5.6"
+note = "A media type followed by a line break."
+
+[[case]]
+name = "subject-empty-array"
+verdict = "non-conformant"
+rule = "5.2"
+note = "An empty array; a key with no value is absent."
+
+[[case]]
+name = "creator-empty-array"
+verdict = "non-conformant"
+rule = "5.1"
+note = "An empty attribution array."

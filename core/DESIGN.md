@@ -6,7 +6,7 @@
 
 ## 1. Borrowed, not invented
 
-Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever writes it, which means containers from different producers describe the same thing as `title`, `Title`, and `doc_title`. The fix is a vocabulary, and the vocabulary already exists. Dublin Core has been the common denominator of document description for decades: Office's document properties are Dublin Core underneath, so are OpenDocument's and XMP's, and every archive and repository system maps to it. A profile with its own vocabulary would be one more set of names to map; a profile that is Dublin Core needs no mapping at all to anything that already speaks it.
+Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever writes it, which means containers from different producers describe the same thing as `title`, `Title`, and `doc_title`. The fix is a vocabulary, and the vocabulary already exists. Dublin Core, first published in 1995 and an ISO standard (15836) since 2003, is the common denominator of document description: Office's document properties are Dublin Core underneath, so are OpenDocument's and XMP's, and archive and repository systems commonly map to it. A profile with its own vocabulary would be one more set of names to map; a profile that is Dublin Core needs no mapping at all to anything that already speaks it.
 
 **Key names are DCMI's own (CORE §2.2), case included.** `rightsHolder` breaks the snake case the rest of a flyleaf tends to use, on purpose: the key is the term, and anyone who knows Dublin Core reads it without a table. Each key cites its term's URI, so a program that wants RDF can have it without the profile defining any.
 
@@ -16,9 +16,9 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 ## 2. Which terms
 
-**The fifteen elements, and the refinements real files carry.** The DCMI Metadata Terms define more than fifty properties. A profile carrying all of them would offer keys nobody fills. The set is the fifteen classic elements plus the terms Office, OpenDocument, PDF, or XMP actually record: `alternative`, `created`, `modified`, `issued`, `license`, `rightsHolder`, `isPartOf`. A term outside the set can be written in the table and is preserved (FRAMEWORK §3); a later version adds terms when files or people turn out to carry them.
+**The fifteen elements, and the refinements people and files use.** The DCMI Metadata Terms define more than fifty properties. A profile carrying all of them would offer keys nobody fills. The set is the fifteen classic elements plus seven refinements. `created`, `modified`, and `license` are recorded by the sources in CORE §4. `alternative`, `issued`, `rightsHolder`, and `isPartOf` are not mapped from any source today, and are in the set because a person describing a document reaches for them: a short title, a publication date, an owner, the series a document belongs to. A term outside the set can be written in the table and is preserved (FRAMEWORK §3); a later version adds terms when files or people turn out to carry them.
 
-**Nothing that is not Dublin Core.** Office records who last modified a file, its revision number, a category, and a status, and none of these are Dublin Core terms. Mapping them in would give the profile keys of its own, which is the one thing it exists not to do.
+**Nothing that is not Dublin Core.** Office records who last modified a file, its revision number, a category, and a status, and none of these are Dublin Core terms. Mapping them in would give the profile keys of its own, which is what it exists to avoid.
 
 ## 3. Attribution, not accountability
 
@@ -26,7 +26,7 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 **Identifiers are optional and never invented (CORE §4.5).** An ORCID iD identifies a researcher and an LEI a company, and either makes a name unambiguous. A tool filling the table from a file writes one only when the file states it, because a guessed identifier is worse than none: it looks authoritative.
 
-**An author string stays whole.** `Doe, J.; Roe, R.` looks like two people, and splitting it looks helpful. But the separators in author strings are not standardized (a comma separates surname from initials as often as it separates people), and two tools splitting differently would write different tables from the same file, which CORE §4 exists to prevent. The keyword fields are split because Office and PDF define them as lists.
+**An author string stays whole.** `Doe, J.; Roe, R.` looks like two people, and splitting it looks helpful. But the separators in author strings are not standardized (a comma separates surname from initials as often as it separates people), and two tools splitting differently would write different tables from the same file, which CORE §4 exists to prevent. The keyword fields are split because Office defines Keywords as a delimited set and PDF writers use `/Keywords` the same way.
 
 ## 4. Shapes
 
@@ -42,9 +42,13 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 **The mapping is normative for whoever fills the table (CORE §4).** The value of a shared vocabulary is that two tools describe the same file the same way. Left to each implementation, the same Word document would come out with Keywords as one subject or four, an author split or whole, a creation time in one zone or another. A person typing a table is free; a program reading a source follows the table.
 
-**Each source's traps are named.** OpenDocument's `dc:creator` is whoever last saved the file, and its author is `meta:initial-creator`; reading the obvious field gets the wrong person. PDF's `/Creator` is the application, not the author. A PDF's `/Subject` is a sentence and goes to `description`, while Office's Subject is a topic and goes to `subject`. These are where implementations would diverge, and each has a row of its own.
+**Each source's traps are named.** OpenDocument's `dc:creator` is whoever last saved the file, and its author is `meta:initial-creator`; reading the obvious field gets the wrong person. PDF's `/Creator` is the application, not the author. A PDF's `/Subject` goes to `description` because that is where XMP places it, so a PDF's two sources agree when they are combined; Office's Subject is a topic and goes to `subject`. These are where implementations would diverge, and each has a row of its own.
 
-**XMP wins key by key (CORE §4.4).** ISO 32000-2 deprecates the PDF document information dictionary in favor of XMP, so XMP takes precedence. But many PDFs carry an XMP packet with a title and nothing else beside a dictionary with an author, and replacing the dictionary wholesale would throw the author away. Key by key keeps everything either source states and still gives one answer.
+**XMP wins key by key (CORE §4.4).** ISO 32000-2 deprecates the document information dictionary's entries, apart from its two dates, in favor of XMP, so XMP takes precedence. But many PDFs carry an XMP packet with a title and nothing else beside a dictionary with an author, and replacing the dictionary wholesale would throw the author away. Key by key keeps everything either source states and still gives one answer.
+
+**`xmpRights:WebStatement` maps to `license` whenever it is an absolute URI.** The property names a web page about the resource's rights, which is often a license and not always. Telling the two apart would need a list of license URIs or a judgment, and two tools would draw the line differently; mapping every URI is the rule two tools can agree on, at the cost of an occasional rights page filed as a license.
+
+**Values that would not conform map to nothing, as do fields the table does not list.** A file can say its language is `English` or its format `PDF`, and a source can carry Dublin Core properties CORE §4 does not map. A tool that wrote the first would produce a non-conforming table, and tools choosing differently about the second would write different tables, so both are dropped.
 
 **Partial dates map to nothing.** A source date of `2024` or `2024-03` cannot become a TOML local date without inventing a day, and an invented first of January would read as a fact.
 

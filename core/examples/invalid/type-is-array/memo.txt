@@ -1,0 +1,1 @@
+Stand-in content for the type-is-array example.

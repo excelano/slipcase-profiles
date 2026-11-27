@@ -1,0 +1,1 @@
+Stand-in content for the format-trailing-newline example.

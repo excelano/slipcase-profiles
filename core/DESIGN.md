@@ -16,7 +16,7 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 ## 2. Which terms
 
-**The fifteen elements, and the refinements people and files use.** The DCMI Metadata Terms define more than fifty properties. A profile carrying all of them would offer keys nobody fills. The set is the fifteen classic elements plus seven refinements. `created`, `modified`, and `license` are recorded by the sources in CORE §4. `alternative`, `issued`, `rightsHolder`, and `isPartOf` are not mapped from any source today, and are in the set because a person describing a document reaches for them: a short title, a publication date, an owner, the series a document belongs to. A term outside the set can be written in the table and is preserved (FRAMEWORK §3); a later version adds terms when files or people turn out to carry them.
+**The fifteen elements, and the refinements people and files use.** The DCMI Metadata Terms define more than fifty properties. A profile carrying all of them would offer keys nobody fills. The set is the fifteen classic elements plus seven refinements. `created` and `modified` are what Office records as `dcterms:` elements. `alternative`, `issued`, `license`, `rightsHolder`, and `isPartOf` are in the set because a person describing a document reaches for them: a short title, a publication date, a license, an owner, the series a document belongs to. A term outside the set can be written in the table and is preserved (FRAMEWORK §3); a later version adds terms when files or people turn out to carry them.
 
 **Nothing that is not Dublin Core.** Office records who last modified a file, its revision number, a category, and a status, and none of these are Dublin Core terms. Mapping them in would give the profile keys of its own, which is what it exists to avoid.
 
@@ -26,7 +26,7 @@ Slipcase gives meaning to two keys and leaves the rest of the flyleaf to whoever
 
 **Identifiers are optional and never invented (CORE §4.5).** An ORCID iD identifies a researcher and an LEI a company, and either makes a name unambiguous. A tool filling the table from a file writes one only when the file states it, because a guessed identifier is worse than none: it looks authoritative.
 
-**An author string stays whole.** `Doe, J.; Roe, R.` looks like two people, and splitting it looks helpful. But the separators in author strings are not standardized (a comma separates surname from initials as often as it separates people), and two tools splitting differently would write different tables from the same file, which CORE §4 exists to prevent. The keyword fields are split because Office defines Keywords as a delimited set and PDF writers use `/Keywords` the same way.
+**An author string stays whole.** `Doe, J.; Roe, R.` looks like two people, and splitting it looks helpful. But the separators in author strings are not standardized (a comma separates surname from initials as often as it separates people), and two tools splitting differently would write different tables from the same file, which CORE §4 exists to prevent.
 
 ## 4. Shapes
 
